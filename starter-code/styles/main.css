@@ -22,6 +22,13 @@ html, body {
   flex-wrap: wrap;
 }
 
+.start {
+  font-family: 'Galindo', cursive;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 10px;
+}
+
 .grid-item {
   height: 50px;
   width: 50px;

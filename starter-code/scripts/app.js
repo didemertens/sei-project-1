@@ -26,10 +26,11 @@ function init() {
   const width = 7
   const height = 11
   const squares = []
-  const car = [50]
+  let carsRight = [50, 54]
   let playerLives = 5
   let gamePlaying = false
   let playerIndex = width * height - 4
+  let carInterval = null
 
 
   // Functions
@@ -39,6 +40,7 @@ function init() {
       createBoard()
       addPlayer()
       addCars()
+      carInterval = setInterval(moveCars, 1000)
     }
   }
 
@@ -52,11 +54,24 @@ function init() {
   }
 
   function addCars() {
-    squares[car].classList.add('car')
+    squares.forEach(square => square.classList.remove('car'))
+    carsRight.forEach(car => squares[car].classList.add('car'))
+  }
+
+  function moveCars() {
+    carsRight = carsRight.map(car => {
+      if (car >= 49 && car < 55) {
+        return car += 1
+      } else if (car === 55) {
+        return car = 49
+      }
+    })
+    playerDead()
+    addCars()
   }
 
   function handleKeyDown(e) {
-    // ! console.log(playerIndex)
+    console.log(playerIndex)
     switch (e.keyCode) {
       case 39:
         if (playerIndex % width < width - 1) playerIndex++
@@ -81,7 +96,7 @@ function init() {
   }
 
   function playerDead() {
-    if (car.includes(playerIndex)) {
+    if (carsRight.includes(playerIndex)) {
       if (playerLives > 1) {
         playerLives -= 1
         lifeDisplay.innerHTML = playerLives
@@ -89,6 +104,7 @@ function init() {
         playerLives -= 1
         lifeDisplay.innerHTML = playerLives
         window.removeEventListener('keydown', handleKeyDown)
+        clearInterval(carInterval)
       }
     }
   }
