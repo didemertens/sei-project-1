@@ -1,0 +1,25 @@
+.container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.grid {
+  height: 565px;
+  width: 380px;
+  /* border: 2px solid black; */
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.grid-item {
+  height: 50px;
+  width: 50px;
+  border: 1px solid black;
+}
+
+.grid-item.player {
+  background-image: url('../assets/pika-sprite.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+}
