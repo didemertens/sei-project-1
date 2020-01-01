@@ -26,7 +26,7 @@ function init() {
   const width = 7
   const height = 11
   const squares = []
-  let carsRight = [50, 54]
+  let carsRight = [55]
   let playerLives = 5
   let gamePlaying = false
   let playerIndex = width * height - 4
@@ -39,7 +39,6 @@ function init() {
       gamePlaying = true
       createBoard()
       addPlayer()
-      addCars()
       carInterval = setInterval(moveCars, 1000)
     }
   }
@@ -53,21 +52,29 @@ function init() {
     })
   }
 
-  function addCars() {
+  function createCars() {
+    while (carsRight.length < 2) {
+      const newCar = 55
+      carsRight.push(newCar)
+    }
+  }
+
+  function displayCars() {
     squares.forEach(square => square.classList.remove('car'))
     carsRight.forEach(car => squares[car].classList.add('car'))
   }
 
   function moveCars() {
     carsRight = carsRight.map(car => {
-      if (car >= 49 && car < 55) {
+      if (car < 62) {
         return car += 1
-      } else if (car === 55) {
-        return car = 49
+      } else if (car === 62) {
+        return car = 56
       }
     })
     playerDead()
-    addCars()
+    displayCars()
+    setTimeout(createCars, 1000)
   }
 
   function handleKeyDown(e) {

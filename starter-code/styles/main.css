@@ -45,3 +45,7 @@ html, body {
 .grid-item.car {
   background-color: olivedrab;
 }
+
+.grid-item.car-hidden {
+  background-color: white;
+}
