@@ -30,9 +30,9 @@ function init() {
   // game variables
   const width = 9
   const height = 11
-  const squares = []
-  const homes = [8, 6, 4, 2, 0]
+  let homes = [8, 6, 4, 2, 0]
 
+  let squares = []
   let carsRight = [80]
   let playerLives = 5
   let frogFamily = 5
@@ -40,12 +40,20 @@ function init() {
   let gamePlaying = false
   let playerIndex = width * height - 5
   let carInterval = null
-
+  let timeOutCars = null
 
   // Functions
   function playGame() {
     if (!gamePlaying) {
       gamePlaying = true
+      window.addEventListener('keydown', handleKeyDown)
+
+      // start button
+      start.removeEventListener('click', playGame)
+      start.addEventListener('click', resetGame)
+      start.innerHTML = 'Reset'
+
+      // set up board
       createBoard()
       createHomes()
       addPlayer()
@@ -93,7 +101,7 @@ function init() {
     })
     playerDead()
     displayCars()
-    setTimeout(createCars, 1000)
+    timeOutCars = setTimeout(createCars, 1000)
   }
 
   // *********** MOVE PLAYER
@@ -183,15 +191,35 @@ function init() {
   function stopGame() {
     gamePlaying = false
     clearInterval(carInterval)
+    clearTimeout(timeOutCars)
     window.removeEventListener('keydown', handleKeyDown)
   }
 
+  function resetGame() {
+    stopGame()
+    // Remove board
+    squares.forEach(square => grid.removeChild(square))
+    // Reset variables
+    homes = [8, 6, 4, 2, 0]
+    squares = []
+    carsRight = [80]
+    playerLives = 5
+    frogFamily = 5
+    frogsHome = 0
+    playerIndex = width * height - 5
+    carInterval = null
+    timeOutCars = null
+    // Play game again
+    start.removeEventListener('click', resetGame)
+    start.addEventListener('click', playGame)
+    start.innerHTML = 'Start'
+  }
+
   // Event listeners
-  window.addEventListener('keydown', handleKeyDown)
   start.addEventListener('click', playGame)
 
   // ! DELETE LATER
-  playGame()
+  // playGame()
 }
 
 window.addEventListener('DOMContentLoaded', init)
