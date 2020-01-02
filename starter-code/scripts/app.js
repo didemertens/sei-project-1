@@ -10,7 +10,12 @@
 // Yes, remove 1 life
 // if lives = 0, stop game and remove keydown event listener
 
+// Get frog to specific place on board
+
 // Get all 5 frogs home
+// Add a loop using player lives, running 5 times and then stop game
+
+
 // Timer for getting the frogs home? 
 // Every step, get 10 points
 // Every frog home, get 50 points
@@ -23,13 +28,17 @@ function init() {
   const lifeDisplay = document.querySelector('#playerLives')
 
   // game variables
-  const width = 7
+  const width = 9
   const height = 11
   const squares = []
-  let carsRight = [55]
+  const homes = [8, 6, 4, 2, 0]
+
+  let carsRight = [80]
   let playerLives = 5
+  let frogFamily = 5
+  let frogsHome = 0
   let gamePlaying = false
-  let playerIndex = width * height - 4
+  let playerIndex = width * height - 5
   let carInterval = null
 
 
@@ -38,10 +47,13 @@ function init() {
     if (!gamePlaying) {
       gamePlaying = true
       createBoard()
+      createHomes()
       addPlayer()
       carInterval = setInterval(moveCars, 1000)
     }
   }
+
+  // *********** GAME BOARD
 
   function createBoard() {
     Array(width * height).join('.').split('.').forEach(() => {
@@ -52,9 +64,16 @@ function init() {
     })
   }
 
+  function createHomes() {
+    homes.forEach(home => squares[home].classList.add('homes'))
+  }
+
+
+  // *********** CARS
+
   function createCars() {
-    while (carsRight.length < 2) {
-      const newCar = 55
+    if (carsRight.length < 2) {
+      const newCar = 80
       carsRight.push(newCar)
     }
   }
@@ -66,10 +85,10 @@ function init() {
 
   function moveCars() {
     carsRight = carsRight.map(car => {
-      if (car < 62) {
+      if (car < 89) {
         return car += 1
-      } else if (car === 62) {
-        return car = 56
+      } else if (car === 89) {
+        return car = 81
       }
     })
     playerDead()
@@ -77,8 +96,10 @@ function init() {
     setTimeout(createCars, 1000)
   }
 
+  // *********** MOVE PLAYER
+
   function handleKeyDown(e) {
-    console.log(playerIndex)
+    // console.log(playerIndex)
     switch (e.keyCode) {
       case 39:
         if (playerIndex % width < width - 1) playerIndex++
@@ -99,7 +120,34 @@ function init() {
   function addPlayer() {
     squares.forEach(square => square.classList.remove('player'))
     squares[playerIndex].classList.add('player')
+    playerWon()
     playerDead()
+  }
+
+  // *********** CHECK WON/LOST
+
+  function playerWon() {
+    if (homes.includes(playerIndex)) {
+      frogsHome += 1
+      frogFamily -= 1
+      squares[playerIndex].classList.remove('homes')
+      squares[playerIndex].classList.add('player-won')
+
+      homes.forEach(home => {
+        if (home === playerIndex) {
+          homes.splice(homes.indexOf(home), 1)
+        }
+      })
+
+      if (frogFamily > 1 && frogsHome !== 5) {
+        resetPlayer()
+      } else if (frogsHome < 5 && playerLives > 1) {
+        frogFamily += playerLives
+        resetPlayer()
+      } else {
+        stopGame()
+      }
+    }
   }
 
   function playerDead() {
@@ -107,14 +155,37 @@ function init() {
       if (playerLives > 1) {
         playerLives -= 1
         lifeDisplay.innerHTML = playerLives
+        resetPlayer()
       } else {
         playerLives -= 1
         lifeDisplay.innerHTML = playerLives
-        window.removeEventListener('keydown', handleKeyDown)
-        clearInterval(carInterval)
+        stopGame()
+      }
+    } else if (squares[playerIndex].classList.contains('player-won')) {
+      if (playerLives > 1 && frogsHome !== 5) {
+        playerLives -= 1
+        lifeDisplay.innerHTML = playerLives
+        resetPlayer()
+      } else {
+        stopGame()
       }
     }
   }
+
+  function resetPlayer() {
+    playerIndex = width * height - 5
+    squares.forEach(square => square.classList.remove('player'))
+    squares[playerIndex].classList.add('player')
+  }
+
+  // *********** STOP GAME
+
+  function stopGame() {
+    gamePlaying = false
+    clearInterval(carInterval)
+    window.removeEventListener('keydown', handleKeyDown)
+  }
+
   // Event listeners
   window.addEventListener('keydown', handleKeyDown)
   start.addEventListener('click', playGame)

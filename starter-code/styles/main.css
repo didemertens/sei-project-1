@@ -16,8 +16,8 @@ html, body {
 
 .grid {
   height: 550px;
-  width: 355px;
-  /* border: 2px solid black; */
+  width: 455px;
+  border: 2px solid black;
   display: flex;
   flex-wrap: wrap;
 }
@@ -41,6 +41,13 @@ html, body {
   background-size: contain;
 }
 
+.grid-item.player-won {
+  background-image: url('../assets/pika-sprite.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+
 /* Obstacles, change later */
 .grid-item.car {
   background-color: olivedrab;
@@ -48,4 +55,8 @@ html, body {
 
 .grid-item.car-hidden {
   background-color: white;
+}
+
+.grid-item.homes {
+  background-color: pink;
 }
