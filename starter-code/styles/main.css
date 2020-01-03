@@ -14,6 +14,14 @@ html, body {
   font-family: 'Galindo', cursive;
 }
 
+.game-result {
+  display: flex;
+}
+
+h3 {
+  margin: 10px;
+}
+
 .grid {
   height: 550px;
   width: 455px;

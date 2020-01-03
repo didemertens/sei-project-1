@@ -15,45 +15,54 @@
 // Get all 5 frogs home
 // Add a loop using player lives, running 5 times and then stop game
 
+/////////////
 
-// Timer for getting the frogs home? 
 // Every step, get 10 points
 // Every frog home, get 50 points
 // All 5 frogs home, get 1000 points
+// Show result + score
+
+// Timer for getting the frogs home? 
 
 function init() {
   // DOM variables
   const grid = document.querySelector('.grid')
   const start = document.querySelector('.start')
-  const lifeDisplay = document.querySelector('#playerLives')
+  const lifeDisplay = document.querySelector('#player-lives')
+  const scoreDisplay = document.querySelector('#player-score')
 
   // game variables
+  // board
   const width = 9
   const height = 11
-  let homes = [8, 6, 4, 2, 0]
 
+  let homes = [8, 6, 4, 2, 0]
   let squares = []
   let carsRight = [80]
+  let carsLeft = [81]
+  let gamePlaying = false
+  let carInterval = null
+  let timeOutCars = null
+
+  let playerIndex = width * height - 5
   let playerLives = 5
   let frogFamily = 5
   let frogsHome = 0
-  let gamePlaying = false
-  let playerIndex = width * height - 5
-  let carInterval = null
-  let timeOutCars = null
+  let playerScore = 0
 
   // Functions
   function playGame() {
     if (!gamePlaying) {
+      // Make game playable
       gamePlaying = true
       window.addEventListener('keydown', handleKeyDown)
 
-      // start button
+      // Show reset button
       start.removeEventListener('click', playGame)
       start.addEventListener('click', resetGame)
       start.innerHTML = 'Reset'
 
-      // set up board
+      // Set up board
       createBoard()
       createHomes()
       addPlayer()
@@ -84,11 +93,16 @@ function init() {
       const newCar = 80
       carsRight.push(newCar)
     }
+    if (carsLeft.length < 2) {
+      const newCar = 81
+      carsLeft.push(newCar)
+    }
   }
 
   function displayCars() {
     squares.forEach(square => square.classList.remove('car'))
     carsRight.forEach(car => squares[car].classList.add('car'))
+    carsLeft.forEach(car => squares[car].classList.add('car'))
   }
 
   function moveCars() {
@@ -99,7 +113,14 @@ function init() {
         return car = 81
       }
     })
-    playerDead()
+    carsLeft = carsLeft.map(car => {
+      if (car > 72) {
+        return car -= 1
+      } else if (car === 72) {
+        return car = 79
+      }
+    })
+    playerLost()
     displayCars()
     timeOutCars = setTimeout(createCars, 1000)
   }
@@ -107,7 +128,7 @@ function init() {
   // *********** MOVE PLAYER
 
   function handleKeyDown(e) {
-    // console.log(playerIndex)
+    console.log(playerIndex)
     switch (e.keyCode) {
       case 39:
         if (playerIndex % width < width - 1) playerIndex++
@@ -116,7 +137,10 @@ function init() {
         if (playerIndex % width > 0) playerIndex--
         break
       case 38:
-        if (playerIndex - width >= 0) playerIndex -= width
+        if (playerIndex - width >= 0) {
+          playerIndex -= width
+          addPoints(10)
+        }
         break
       case 40:
         if (playerIndex + width < width * height) playerIndex += width
@@ -129,13 +153,25 @@ function init() {
     squares.forEach(square => square.classList.remove('player'))
     squares[playerIndex].classList.add('player')
     playerWon()
-    playerDead()
+    playerLost()
   }
+
+  // *********** SHOW/UPDATE SCORE
+  function addPoints(points) {
+    playerScore += points
+    displayScore()
+  }
+
+  function displayScore() {
+    scoreDisplay.innerHTML = playerScore
+  }
+
 
   // *********** CHECK WON/LOST
 
   function playerWon() {
     if (homes.includes(playerIndex)) {
+      addPoints(50)
       frogsHome += 1
       frogFamily -= 1
       squares[playerIndex].classList.remove('homes')
@@ -153,14 +189,16 @@ function init() {
         frogFamily += playerLives
         resetPlayer()
       } else {
+        addPoints(1000)
         stopGame()
       }
     }
   }
 
-  function playerDead() {
+  function playerLost() {
     if (carsRight.includes(playerIndex)) {
       if (playerLives > 1) {
+        playerScore -= 10
         playerLives -= 1
         lifeDisplay.innerHTML = playerLives
         resetPlayer()
@@ -171,6 +209,7 @@ function init() {
       }
     } else if (squares[playerIndex].classList.contains('player-won')) {
       if (playerLives > 1 && frogsHome !== 5) {
+        playerScore -= 10
         playerLives -= 1
         lifeDisplay.innerHTML = playerLives
         resetPlayer()
@@ -186,7 +225,7 @@ function init() {
     squares[playerIndex].classList.add('player')
   }
 
-  // *********** STOP GAME
+  // *********** STOP/RESET GAME
 
   function stopGame() {
     gamePlaying = false
@@ -209,7 +248,7 @@ function init() {
     playerIndex = width * height - 5
     carInterval = null
     timeOutCars = null
-    // Play game again
+    // Show start button again
     start.removeEventListener('click', resetGame)
     start.addEventListener('click', playGame)
     start.innerHTML = 'Start'
@@ -219,7 +258,7 @@ function init() {
   start.addEventListener('click', playGame)
 
   // ! DELETE LATER
-  // playGame()
+  playGame()
 }
 
 window.addEventListener('DOMContentLoaded', init)
