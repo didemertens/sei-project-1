@@ -128,7 +128,7 @@ function init() {
   // *********** MOVE PLAYER
 
   function handleKeyDown(e) {
-    console.log(playerIndex)
+    // console.log(playerIndex)
     switch (e.keyCode) {
       case 39:
         if (playerIndex % width < width - 1) playerIndex++
@@ -196,9 +196,10 @@ function init() {
   }
 
   function playerLost() {
-    if (carsRight.includes(playerIndex)) {
+    if (carsRight.includes(playerIndex) || carsLeft.includes(playerIndex)) {
       if (playerLives > 1) {
         playerScore -= 10
+        displayScore()
         playerLives -= 1
         lifeDisplay.innerHTML = playerLives
         resetPlayer()
@@ -210,10 +211,13 @@ function init() {
     } else if (squares[playerIndex].classList.contains('player-won')) {
       if (playerLives > 1 && frogsHome !== 5) {
         playerScore -= 10
+        displayScore()
         playerLives -= 1
         lifeDisplay.innerHTML = playerLives
         resetPlayer()
       } else {
+        playerLives -= 1
+        lifeDisplay.innerHTML = playerLives
         stopGame()
       }
     }
