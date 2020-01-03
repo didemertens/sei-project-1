@@ -22,12 +22,19 @@ h3 {
   margin: 10px;
 }
 
+.result-game {
+  text-align: center;
+  color: white;
+  margin-top: 150px;
+}
+
 .grid {
   height: 550px;
   width: 455px;
   border: 2px solid black;
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .start {

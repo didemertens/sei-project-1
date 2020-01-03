@@ -15,13 +15,16 @@
 // Get all 5 frogs home
 // Add a loop using player lives, running 5 times and then stop game
 
-/////////////
-
 // Every step, get 10 points
 // Every frog home, get 50 points
 // All 5 frogs home, get 1000 points
-// Show result + score
 
+// Show result + score
+////////
+// Add water, move with logs etc.
+
+
+// Add highscore with local storage
 // Timer for getting the frogs home? 
 
 function init() {
@@ -33,24 +36,28 @@ function init() {
 
   // game variables
   let gamePlaying = false
+  let resultGame = ''
   // board
   const width = 9
   const height = 11
   let squares = []
   let homes = [8, 6, 4, 2, 0]
   // cars
-  let carsRight = [80]
-  let carsLeft = [81]
-  let carAmount = 0
+  let carsRight = [80, 84]
+  let carsLeft = [76, 78, 81]
+  // let carAmount = 0
   let moveCarInterval = null
   let addingCarsTimeOut = null
-  let counterCarsAdded = 0
+  // let counterCarsAdded = 0
   // player
   let playerIndex = width * height - 5
   let playerLives = 5
   let frogFamily = 5
   let frogsHome = 0
   let playerScore = 0
+  let gameWon = false
+  let gameLost = false
+
 
   // Functions
   function playGame() {
@@ -68,7 +75,7 @@ function init() {
       createBoard()
       createHomes()
       addPlayer()
-      moveCarInterval = setInterval(moveCars, 1000)
+      moveCarInterval = setInterval(moveCars, 900)
     }
   }
 
@@ -91,62 +98,85 @@ function init() {
   // *********** CARS
 
   function moveCars() {
-    carsRight = carsRight.map(car => {
+    carsRight = carsRight.reduce((newCars, car) => {
       if (car < 89) {
-        return car += 1
+        car += 1
+        newCars.push(car)
       } else if (car === 89) {
-        return car = 81
+        newCars.splice(carsRight.indexOf(car), 1)
+        setTimeout(() => {
+          createCar('right')
+        }, 1000)
       }
-    })
+      return newCars
+    }, [])
 
-    carsLeft = carsLeft.map(car => {
+    carsLeft = carsLeft.reduce((newCars, car) => {
       if (car > 72) {
-        return car -= 1
+        car -= 1
+        newCars.push(car)
       } else if (car === 72) {
-        return car = 79
+        newCars.splice(carsLeft.indexOf(car), 1)
+        setTimeout(() => {
+          createCar('left')
+        }, 1000)
       }
-    })
+      return newCars
+    }, [])
+
 
     playerLost()
     displayCars()
-    loopAddCars()
   }
 
   function displayCars() {
+    console.log(carsLeft)
     squares.forEach(square => square.classList.remove('car'))
     carsRight.forEach(car => squares[car].classList.add('car'))
     carsLeft.forEach(car => squares[car].classList.add('car'))
   }
 
-  function loopAddCars() {
-    if (counterCarsAdded < 3) {
-      counterCarsAdded++
-      addingCarsTimeOut = setTimeout(() => {
-        createCars()
-        loopAddCars()
-      }, 1500)
-    }
-  }
-
-  function createCars() {
-    if (carsRight.length < 2) {
+  function createCar(direction) {
+    if (direction === 'right') {
+      const newCar = 81
+      carsRight.unshift(newCar)
+    } else {
       const newCar = 80
-      carsRight.push(newCar)
+      carsLeft.push(newCar)
     }
 
-    if (carsLeft.length >= carAmount && carAmount <= 3) {
-      if (carAmount % 2 === 0) {
-        const newCar = 81
-        carsLeft.push(newCar)
-      }
-      carAmount++
-    }
+    displayCars()
   }
+
+  // function loopAddCars() {
+  //   if (counterCarsAdded < 3) {
+  //     counterCarsAdded++
+  //     addingCarsTimeOut = setTimeout(() => {
+  //       createCars()
+  //       loopAddCars()
+  //     }, 1500)
+  //   }
+  // }
+
+  // function createCars() {
+  //   if (carsRight.length < 2) {
+  //     const newCar = 80
+  //     carsRight.push(newCar)
+  //   }
+
+  //   if (carsLeft.length >= carAmount && carAmount <= 3) {
+  //     if (carAmount % 2 === 0) {
+  //       const newCar = 81
+  //       carsLeft.push(newCar)
+  //     }
+  //     carAmount++
+  //   }
+  // }
 
   // *********** MOVE PLAYER
 
   function handleKeyDown(e) {
-    // console.log(playerIndex)
+    console.log(playerIndex)
     switch (e.keyCode) {
       case 39:
         if (playerIndex % width < width - 1) playerIndex++
@@ -186,6 +216,19 @@ function init() {
   }
 
 
+  function showResult() {
+    squares.forEach(square => grid.removeChild(square))
+    resultGame = document.createElement('h3')
+    resultGame.classList.add('result-game')
+    grid.appendChild(resultGame)
+    grid.style.backgroundColor = 'black'
+    if (gameWon) {
+      resultGame.innerHTML = `You won!<br>You got ${playerScore} points.`
+    } else if (gameLost) {
+      resultGame.innerHTML = `Game over!<br>You got ${playerScore} points.`
+    }
+  }
+
   // *********** CHECK WON/LOST
 
   function playerWon() {
@@ -209,7 +252,9 @@ function init() {
         resetPlayer()
       } else {
         addPoints(1000)
+        gameWon = true
         stopGame()
+        showResult()
       }
     }
   }
@@ -225,7 +270,9 @@ function init() {
       } else {
         playerLives -= 1
         lifeDisplay.innerHTML = playerLives
+        gameLost = true
         stopGame()
+        showResult()
       }
     } else if (squares[playerIndex].classList.contains('player-won')) {
       if (playerLives > 1 && frogsHome !== 5) {
@@ -237,7 +284,9 @@ function init() {
       } else {
         playerLives -= 1
         lifeDisplay.innerHTML = playerLives
+        gameLost = true
         stopGame()
+        showResult()
       }
     }
   }
@@ -259,19 +308,27 @@ function init() {
 
   function resetGame() {
     stopGame()
-    // Remove board
-    squares.forEach(square => grid.removeChild(square))
+    if (gameWon || gameLost) {
+      grid.removeChild(resultGame)
+      grid.style.backgroundColor = 'white'
+    } else {
+      squares.forEach(square => grid.removeChild(square))
+    }
     // Reset variables
     homes = [8, 6, 4, 2, 0]
     squares = []
-    carsRight = [80]
-    carsLeft = [81]
-    counterCarsAdded = 0
-    carAmount = 0
+    carsRight = [80, 84]
+    carsLeft = [81, 78, 76]
+    // counterCarsAdded = 0
+    // carAmount = 0
+
     playerLives = 5
     frogFamily = 5
     frogsHome = 0
     playerIndex = width * height - 5
+    gameWon = false
+    gameLost = false
+
     moveCarInterval = null
     addingCarsTimeOut = null
     // Show start button again
@@ -285,6 +342,8 @@ function init() {
 
   // ! DELETE LATER
   playGame()
+  // gameLost = true
+  // showResult()
 }
 
 window.addEventListener('DOMContentLoaded', init)
