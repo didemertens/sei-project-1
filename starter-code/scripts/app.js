@@ -46,8 +46,8 @@ function init() {
   let carsRight = [80, 84]
   let carsLeft = [76, 78, 81]
   // water
-  let waterSquaresRight = [8, 9, 10, 13, 14, 15, 16, 20, 21, 22, 23]
-  let waterSquaresLeft = [30, 31, 34, 35, 36, 37, 38, 42, 43, 44]
+  let logSquaresRight = [9, 10, 12, 13, 22, 23, 24, 25]
+  let logSquaresLeft = [30, 31, 37, 38, 43, 44]
   // let carAmount = 0
   let moveCarInterval = null
   let addingCarsTimeOut = null
@@ -178,45 +178,50 @@ function init() {
 
   // *********** WATER/LOGS
 
-  function displayWater() {
-    // waterSquares = Array.from({ length: 3 * width }, (v, i) => i + width)
-    squares.forEach(square => square.classList.remove('water'))
-    waterSquaresRight.forEach(water => squares[water].classList.add('water'))
-    waterSquaresLeft.forEach(water => squares[water].classList.add('water'))
 
+  let waterSquares = Array.from({ length: 4 * width }, (v, i) => i + width)
+
+  // console.log(logs)
+
+  function displayLogs() {
+    squares.forEach(square => square.classList.remove('log'))
+    logSquaresRight.forEach(log => squares[log].classList.add('log'))
+    logSquaresLeft.forEach(log => squares[log].classList.add('log'))
+    displayWater()
   }
 
+  function displayWater() {
+    waterSquares = Array.from({ length: 4 * width }, (v, i) => i + width)
+    squares.forEach(square => square.classList.remove('water'))
+    waterSquares = waterSquares.filter(water => !logSquaresRight.includes(water) && !logSquaresLeft.includes(water))
+    waterSquares.forEach(water => squares[water].classList.add('water'))
+  }
 
-  function moveWater() {
-    waterSquaresRight = waterSquaresRight.reduce((newWater, water) => {
-      if (water < 26) {
-        water += 1
-        newWater.push(water)
-      } else if (water === 26) {
-        water = 9
-        newWater.push(water)
+  function moveLogs() {
+    logSquaresRight = logSquaresRight.reduce((newLogs, log) => {
+      if (log < 26) {
+        log += 1
+        newLogs.push(log)
+      } else if (log === 26) {
+        log = 9
+        newLogs.push(log)
       }
-
-      // newCars.splice(carsRight.indexOf(car), 1)
-      // setTimeout(() => {
-      //   createCar('right')
-      // }, 1000)
-      return newWater
+      return newLogs
     }, [])
 
-    waterSquaresLeft = waterSquaresLeft.reduce((newWater, water) => {
-      if (water > 27) {
-        water -= 1
-        newWater.push(water)
-      } else if (water === 27) {
-        water = 44
-        newWater.push(water)
+    logSquaresLeft = logSquaresLeft.reduce((newLogs, log) => {
+      if (log > 27) {
+        log -= 1
+        newLogs.push(log)
+      } else if (log === 27) {
+        log = 44
+        newLogs.push(log)
       }
-      return newWater
+      return newLogs
     }, [])
 
     // playerLost()
-    displayWater()
+    displayLogs()
   }
 
   // *********** MOVE PLAYER
@@ -306,7 +311,7 @@ function init() {
   }
 
   function playerLost() {
-    if (carsRight.includes(playerIndex) || carsLeft.includes(playerIndex)) {
+    if (carsRight.includes(playerIndex) || carsLeft.includes(playerIndex) || waterSquares.includes(playerIndex)) {
       if (playerLives > 1) {
         playerScore -= 10
         displayScore()
@@ -365,8 +370,8 @@ function init() {
     squares = []
     carsRight = [80, 84]
     carsLeft = [81, 78, 76]
-    waterSquaresRight = [8, 9, 10, 13, 14, 15, 16, 20, 21, 22, 23]
-    waterSquaresLeft = [30, 31, 34, 35, 36, 37, 38, 42, 43, 44]
+    logSquaresRight = [9, 10, 12, 13, 22, 23, 24, 25]
+    logSquaresLeft = [30, 31, 37, 38, 43, 44]
     // counterCarsAdded = 0
     // carAmount = 0
 
@@ -394,7 +399,9 @@ function init() {
 
   // ! DELETE LATER
   playGame()
-  setInterval(moveWater, 1000)
+  // displayWater()
+  setInterval(moveLogs, 1000)
+  displayLogs()
   // gameLost = true
   // showResult()
 }

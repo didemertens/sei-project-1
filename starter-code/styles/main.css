@@ -79,3 +79,7 @@ h3 {
 .grid-item.water {
   background-color: blue;
 }
+
+.grid-item.log {
+  background-color: burlywood;
+}
