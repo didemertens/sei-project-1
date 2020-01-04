@@ -129,7 +129,6 @@ function init() {
       return newCars
     }, [])
 
-    playerLost()
     displayCars()
   }
 
@@ -137,6 +136,7 @@ function init() {
     squares.forEach(square => square.classList.remove('car'))
     carsRight.forEach(car => squares[car].classList.add('car'))
     carsLeft.forEach(car => squares[car].classList.add('car'))
+    playerLost()
   }
 
   function createCar(direction) {
@@ -147,7 +147,6 @@ function init() {
       const newCar = 80
       carsLeft.push(newCar)
     }
-
     displayCars()
   }
 
@@ -202,7 +201,6 @@ function init() {
       return newLogs
     }, [])
 
-    playerLost()
     displayLogs()
     movePlayerOnLog()
   }
@@ -234,6 +232,7 @@ function init() {
         addPlayer()
       }
     }
+    playerLost()
   }
 
 
