@@ -22,7 +22,7 @@
 // Show result + score
 ////////
 // Add water, move with logs etc.
-
+// Add animation when player dies
 
 // Add highscore with local storage
 // Timer for getting the frogs home? 
@@ -45,6 +45,9 @@ function init() {
   // cars
   let carsRight = [80, 84]
   let carsLeft = [76, 78, 81]
+  // water
+  let waterSquaresRight = [8, 9, 10, 13, 14, 15, 16, 20, 21, 22, 23]
+  let waterSquaresLeft = [30, 31, 34, 35, 36, 37, 38, 42, 43, 44]
   // let carAmount = 0
   let moveCarInterval = null
   let addingCarsTimeOut = null
@@ -130,7 +133,6 @@ function init() {
   }
 
   function displayCars() {
-    console.log(carsLeft)
     squares.forEach(square => square.classList.remove('car'))
     carsRight.forEach(car => squares[car].classList.add('car'))
     carsLeft.forEach(car => squares[car].classList.add('car'))
@@ -172,6 +174,50 @@ function init() {
   //     carAmount++
   //   }
   // }
+
+
+  // *********** WATER/LOGS
+
+  function displayWater() {
+    // waterSquares = Array.from({ length: 3 * width }, (v, i) => i + width)
+    squares.forEach(square => square.classList.remove('water'))
+    waterSquaresRight.forEach(water => squares[water].classList.add('water'))
+    waterSquaresLeft.forEach(water => squares[water].classList.add('water'))
+
+  }
+
+
+  function moveWater() {
+    waterSquaresRight = waterSquaresRight.reduce((newWater, water) => {
+      if (water < 26) {
+        water += 1
+        newWater.push(water)
+      } else if (water === 26) {
+        water = 9
+        newWater.push(water)
+      }
+
+      // newCars.splice(carsRight.indexOf(car), 1)
+      // setTimeout(() => {
+      //   createCar('right')
+      // }, 1000)
+      return newWater
+    }, [])
+
+    waterSquaresLeft = waterSquaresLeft.reduce((newWater, water) => {
+      if (water > 27) {
+        water -= 1
+        newWater.push(water)
+      } else if (water === 27) {
+        water = 44
+        newWater.push(water)
+      }
+      return newWater
+    }, [])
+
+    // playerLost()
+    displayWater()
+  }
 
   // *********** MOVE PLAYER
 
@@ -319,18 +365,24 @@ function init() {
     squares = []
     carsRight = [80, 84]
     carsLeft = [81, 78, 76]
+    waterSquaresRight = [8, 9, 10, 13, 14, 15, 16, 20, 21, 22, 23]
+    waterSquaresLeft = [30, 31, 34, 35, 36, 37, 38, 42, 43, 44]
     // counterCarsAdded = 0
     // carAmount = 0
 
     playerLives = 5
     frogFamily = 5
     frogsHome = 0
+    playerScore = 0
     playerIndex = width * height - 5
     gameWon = false
     gameLost = false
 
     moveCarInterval = null
     addingCarsTimeOut = null
+    // Reset lives/score
+    lifeDisplay.innerHTML = playerLives
+    scoreDisplay.innerHTML = playerScore
     // Show start button again
     start.removeEventListener('click', resetGame)
     start.addEventListener('click', playGame)
@@ -342,6 +394,7 @@ function init() {
 
   // ! DELETE LATER
   playGame()
+  setInterval(moveWater, 1000)
   // gameLost = true
   // showResult()
 }

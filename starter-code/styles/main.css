@@ -65,7 +65,7 @@ h3 {
 
 /* Obstacles, change later */
 .grid-item.car {
-  background-color: olivedrab;
+  background-color: green;
 }
 
 .grid-item.car-hidden {
@@ -74,4 +74,8 @@ h3 {
 
 .grid-item.homes {
   background-color: pink;
+}
+
+.grid-item.water {
+  background-color: blue;
 }
