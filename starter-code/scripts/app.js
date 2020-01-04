@@ -46,11 +46,13 @@ function init() {
   let carsRight = [80, 84]
   let carsLeft = [76, 78, 81]
   // water
-  let logSquaresRight = [9, 10, 12, 13, 22, 23, 24, 25]
-  let logSquaresLeft = [30, 31, 37, 38, 43, 44]
+  let waterSquares = []
+  let logsRight = [9, 10, 12, 13, 15, 16, 17, 22, 23, 24, 25]
+  let logsLeft = [27, 28, 31, 32, 37, 38, 43, 44]
   // let carAmount = 0
   let moveCarInterval = null
   let addingCarsTimeOut = null
+  let moveLogInterval = null
   // let counterCarsAdded = 0
   // player
   let playerIndex = width * height - 5
@@ -67,7 +69,6 @@ function init() {
     if (!gamePlaying) {
       // Make game playable
       gamePlaying = true
-      window.addEventListener('keydown', handleKeyDown)
 
       // Show reset button
       start.removeEventListener('click', playGame)
@@ -77,8 +78,10 @@ function init() {
       // Set up board
       createBoard()
       createHomes()
-      addPlayer()
       moveCarInterval = setInterval(moveCars, 900)
+      moveLogInterval = setInterval(moveLogs, 1000)
+      addPlayer()
+      window.addEventListener('keydown', handleKeyDown)
     }
   }
 
@@ -96,7 +99,6 @@ function init() {
   function createHomes() {
     homes.forEach(home => squares[home].classList.add('homes'))
   }
-
 
   // *********** CARS
 
@@ -126,7 +128,6 @@ function init() {
       }
       return newCars
     }, [])
-
 
     playerLost()
     displayCars()
@@ -178,27 +179,8 @@ function init() {
 
   // *********** WATER/LOGS
 
-
-  let waterSquares = Array.from({ length: 4 * width }, (v, i) => i + width)
-
-  // console.log(logs)
-
-  function displayLogs() {
-    squares.forEach(square => square.classList.remove('log'))
-    logSquaresRight.forEach(log => squares[log].classList.add('log'))
-    logSquaresLeft.forEach(log => squares[log].classList.add('log'))
-    displayWater()
-  }
-
-  function displayWater() {
-    waterSquares = Array.from({ length: 4 * width }, (v, i) => i + width)
-    squares.forEach(square => square.classList.remove('water'))
-    waterSquares = waterSquares.filter(water => !logSquaresRight.includes(water) && !logSquaresLeft.includes(water))
-    waterSquares.forEach(water => squares[water].classList.add('water'))
-  }
-
   function moveLogs() {
-    logSquaresRight = logSquaresRight.reduce((newLogs, log) => {
+    logsRight = logsRight.reduce((newLogs, log) => {
       if (log < 26) {
         log += 1
         newLogs.push(log)
@@ -209,7 +191,7 @@ function init() {
       return newLogs
     }, [])
 
-    logSquaresLeft = logSquaresLeft.reduce((newLogs, log) => {
+    logsLeft = logsLeft.reduce((newLogs, log) => {
       if (log > 27) {
         log -= 1
         newLogs.push(log)
@@ -220,14 +202,44 @@ function init() {
       return newLogs
     }, [])
 
-    // playerLost()
+    playerLost()
     displayLogs()
+    movePlayerOnLog()
   }
+
+  function displayLogs() {
+    squares.forEach(square => square.classList.remove('log'))
+    logsRight.forEach(log => squares[log].classList.add('log'))
+    logsLeft.forEach(log => squares[log].classList.add('log'))
+    displayWater()
+  }
+
+  function displayWater() {
+    waterSquares = Array.from({ length: 4 * width }, (v, i) => i + width)
+    squares.forEach(square => square.classList.remove('water'))
+    waterSquares = waterSquares.filter(water => !logsRight.includes(water) && !logsLeft.includes(water))
+    waterSquares.forEach(water => squares[water].classList.add('water'))
+  }
+
+  function movePlayerOnLog() {
+    if (logsRight.includes(playerIndex + 1)) {
+      if (playerIndex % width < width - 1) {
+        playerIndex++
+        addPlayer()
+      }
+    }
+    if (logsLeft.includes(playerIndex - 1)) {
+      if (playerIndex % width > 0) {
+        playerIndex--
+        addPlayer()
+      }
+    }
+  }
+
 
   // *********** MOVE PLAYER
 
   function handleKeyDown(e) {
-    console.log(playerIndex)
     switch (e.keyCode) {
       case 39:
         if (playerIndex % width < width - 1) playerIndex++
@@ -354,6 +366,7 @@ function init() {
     gamePlaying = false
     clearInterval(moveCarInterval)
     clearTimeout(addingCarsTimeOut)
+    clearInterval(moveLogInterval)
     window.removeEventListener('keydown', handleKeyDown)
   }
 
@@ -370,10 +383,12 @@ function init() {
     squares = []
     carsRight = [80, 84]
     carsLeft = [81, 78, 76]
-    logSquaresRight = [9, 10, 12, 13, 22, 23, 24, 25]
-    logSquaresLeft = [30, 31, 37, 38, 43, 44]
+    waterSquares = []
+    logsRight = [9, 10, 12, 13, 22, 23, 24, 25]
+    logsLeft = [30, 31, 37, 38, 43, 44]
     // counterCarsAdded = 0
     // carAmount = 0
+
 
     playerLives = 5
     frogFamily = 5
@@ -385,6 +400,7 @@ function init() {
 
     moveCarInterval = null
     addingCarsTimeOut = null
+    moveLogInterval = null
     // Reset lives/score
     lifeDisplay.innerHTML = playerLives
     scoreDisplay.innerHTML = playerScore
@@ -400,8 +416,6 @@ function init() {
   // ! DELETE LATER
   playGame()
   // displayWater()
-  setInterval(moveLogs, 1000)
-  displayLogs()
   // gameLost = true
   // showResult()
 }
