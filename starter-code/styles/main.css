@@ -18,16 +18,6 @@ html, body {
   display: flex;
 }
 
-h3 {
-  margin: 10px;
-}
-
-.result-game {
-  text-align: center;
-  color: white;
-  margin-top: 150px;
-}
-
 .grid {
   height: 550px;
   width: 455px;
@@ -35,6 +25,18 @@ h3 {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
+}
+
+h3 {
+  margin: 10px;
+}
+
+.result-game, .count-down {
+  color: white;
+  text-align: center;
+  margin-top: -30px;
+  font-size: 45px;
 }
 
 .start {

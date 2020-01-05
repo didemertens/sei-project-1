@@ -24,7 +24,13 @@
 
 ////////
 // Count down before player can play
+
 // Add animation when player dies
+
+// Add more cars
+
+// Make one/two log rows faster
+
 
 // Add highscore with local storage
 
@@ -45,6 +51,11 @@ function init() {
   // board
   const width = 9
   const height = 11
+
+  let counterRunning = false
+  let countDownGame = ''
+  let counterTime = 3
+
   let squares = []
   let homes = [8, 6, 4, 2, 0]
   // cars
@@ -58,6 +69,9 @@ function init() {
   let moveCarInterval = null
   let addingCarsTimeOut = null
   let moveLogInterval = null
+  let counterTimeOut = null
+  let timeOutRemoveCounter = null
+  let timeOutGame = null
   // player
   let playerIndex = width * height - 5
   let playerLives = 5
@@ -69,6 +83,7 @@ function init() {
 
 
   // Functions
+  // *********** START GAME
   function playGame() {
     if (!gamePlaying) {
       gamePlaying = true
@@ -76,13 +91,51 @@ function init() {
       start.removeEventListener('click', playGame)
       start.addEventListener('click', resetGame)
       start.innerHTML = 'Reset'
-      // Set up board
-      createBoard()
-      moveCarInterval = setInterval(moveCars, 900)
-      moveLogInterval = setInterval(moveLogs, 1000)
-      addPlayer()
-      window.addEventListener('keydown', handleKeyDown)
+      // Counter
+      if (!counterRunning) {
+        counterRunning = true
+        createCounter()
+      }
     }
+  }
+
+  // Create/show counter
+  function createCounter() {
+    grid.style.backgroundColor = 'black'
+    countDownGame = document.createElement('h2')
+    countDownGame.classList.add('count-down')
+    grid.appendChild(countDownGame)
+    showCountDown()
+  }
+
+  function showCountDown() {
+    countDownGame.innerHTML = `Get ready!<br> ${counterTime}`
+    countDown()
+  }
+
+  function countDown() {
+    if (counterTime >= 1) {
+      counterTime--
+      counterTimeOut = setTimeout(showCountDown, 1000)
+    } else {
+      countDownGame.innerHTML = 'Go!'
+      timeOutRemoveCounter = setTimeout(removeCounter, 1000)
+      timeOutGame = setTimeout(makeGame, 1000)
+    }
+  }
+
+  function removeCounter() {
+    grid.removeChild(countDownGame)
+    clearTimeout(counterTimeOut)
+    clearTimeout(timeOutRemoveCounter)
+    grid.style.backgroundColor = 'white'
+    counterRunning = false
+  }
+
+  function makeGame() {
+    clearTimeout(timeOutGame)
+    createBoard()
+    movePlayer()
   }
 
   // *********** GAME BOARD
@@ -94,8 +147,17 @@ function init() {
       squares.push(square)
       grid.appendChild(square)
     })
+    moveCars()
+    moveLogs()
+    moveCarInterval = setInterval(moveCars, 900)
+    moveLogInterval = setInterval(moveLogs, 1000)
     createHomes()
     createSafePlaces()
+  }
+
+  function movePlayer() {
+    addPlayer()
+    window.addEventListener('keydown', handleKeyDown)
   }
 
   function createHomes() {
@@ -377,6 +439,9 @@ function init() {
 
   function resetGame() {
     stopGame()
+    if (counterRunning) {
+      removeCounter()
+    }
     if (gameWon || gameLost) {
       grid.removeChild(resultGame)
       grid.style.backgroundColor = 'white'
@@ -392,6 +457,8 @@ function init() {
     waterSquares = []
     logsRight = [9, 10, 12, 13, 15, 16, 17, 22, 23, 24, 25]
     logsLeft = [27, 28, 31, 32, 37, 38, 43, 44]
+    countDownGame = ''
+    counterTime = 3
     // player
     playerLives = 5
     frogFamily = 5
@@ -404,13 +471,14 @@ function init() {
     moveCarInterval = null
     addingCarsTimeOut = null
     moveLogInterval = null
+    counterTimeOut = null
+    timeOutRemoveCounter = null
+    timeOutGame = null
     // Reset display lives/score
     lifeDisplay.innerHTML = playerLives
     scoreDisplay.innerHTML = playerScore
     // Show start button again
-    start.removeEventListener('click', resetGame)
-    start.addEventListener('click', playGame)
-    start.innerHTML = 'Start'
+    playGame()
   }
 
   // Event listeners
