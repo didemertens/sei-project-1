@@ -70,13 +70,17 @@ h3 {
 
 
 /* Obstacles, change later */
-.grid-item.car {
+.grid-item.car-right {
   background-color: green;
 }
 
-.grid-item.car-hidden {
-  background-color: white;
+.grid-item.car-left {
+  background-color: red;
 }
+
+/* .grid-item.car-hidden {
+  background-color: white;
+} */
 
 .grid-item.homes {
   background-color: pink;

@@ -23,9 +23,9 @@
 // Add water, move with logs etc.
 
 // Count down before player can play
+// Add more cars
 
 ////////
-// Add more cars
 // Make one/two log rows faster
 
 // Add animation when player dies
@@ -36,6 +36,11 @@
 // > normal, dizzy, puppy
 // Attack of the cat(s)?  Following dogs?
 // Timer for getting the frogs home? 
+
+// 2 players?
+
+// Skip story button
+// Toggle options?
 
 function init() {
   // DOM VARIABLES
@@ -93,8 +98,9 @@ function init() {
       start.addEventListener('click', resetGame)
       start.innerHTML = 'Reset'
       // Counter
-      // ! uncomment later
+      // ! Delete
       makeGame()
+      // ! uncomment later
       // if (!counterRunning) {
       //   counterRunning = true
       //   createCounter()
@@ -231,11 +237,11 @@ function init() {
   }
 
   function displayCars() {
-    squares.forEach(square => square.classList.remove('car'))
-    carsRightOne.forEach(car => squares[car].classList.add('car'))
-    carsRightTwo.forEach(car => squares[car].classList.add('car'))
-    carsLeftOne.forEach(car => squares[car].classList.add('car'))
-    carsLeftTwo.forEach(car => squares[car].classList.add('car'))
+    squares.forEach(square => square.classList.remove('car-right', 'car-left'))
+    carsRightOne.forEach(car => squares[car].classList.add('car-right'))
+    carsRightTwo.forEach(car => squares[car].classList.add('car-right'))
+    carsLeftOne.forEach(car => squares[car].classList.add('car-left'))
+    carsLeftTwo.forEach(car => squares[car].classList.add('car-left'))
     playerLost()
   }
 
