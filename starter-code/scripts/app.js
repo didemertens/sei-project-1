@@ -22,20 +22,19 @@
 // Show result + score
 // Add water, move with logs etc.
 
-////////
 // Count down before player can play
 
-// Add animation when player dies
-
+////////
 // Add more cars
-
 // Make one/two log rows faster
 
+// Add animation when player dies
 
 // Add highscore with local storage
 
 // Add easy, medium, hard
 // > normal, dizzy, puppy
+// Attack of the cat(s)?  Following dogs?
 // Timer for getting the frogs home? 
 
 function init() {
@@ -59,8 +58,10 @@ function init() {
   let squares = []
   let homes = [8, 6, 4, 2, 0]
   // cars
-  let carsRight = [80, 84]
-  let carsLeft = [76, 78, 81]
+  let carsRightOne = [80, 84]
+  let carsRightTwo = [63, 69]
+  let carsLeftOne = [76, 78, 81]
+  let carsLeftTwo = [55, 57, 61]
   // water
   let waterSquares = []
   let logsRight = [9, 10, 12, 13, 15, 16, 17, 22, 23, 24, 25]
@@ -92,10 +93,12 @@ function init() {
       start.addEventListener('click', resetGame)
       start.innerHTML = 'Reset'
       // Counter
-      if (!counterRunning) {
-        counterRunning = true
-        createCounter()
-      }
+      // ! uncomment later
+      makeGame()
+      // if (!counterRunning) {
+      //   counterRunning = true
+      //   createCounter()
+      // }
     }
   }
 
@@ -172,27 +175,53 @@ function init() {
   // *********** CARS
 
   function moveCars() {
-    carsRight = carsRight.reduce((newCars, car) => {
+    carsRightOne = carsRightOne.reduce((newCars, car) => {
       if (car < 89) {
         car += 1
         newCars.push(car)
       } else if (car === 89) {
-        newCars.splice(carsRight.indexOf(car), 1)
+        newCars.splice(carsRightOne.indexOf(car), 1)
         setTimeout(() => {
-          createCar('right')
+          createCar('rightOne')
         }, 1000)
       }
       return newCars
     }, [])
 
-    carsLeft = carsLeft.reduce((newCars, car) => {
+    carsRightTwo = carsRightTwo.reduce((newCars, car) => {
+      if (car < 71) {
+        car += 1
+        newCars.push(car)
+      } else if (car === 71) {
+        newCars.splice(carsRightTwo.indexOf(car), 1)
+        setTimeout(() => {
+          createCar('rightTwo')
+        }, 1000)
+      }
+      return newCars
+    }, [])
+
+    carsLeftOne = carsLeftOne.reduce((newCars, car) => {
       if (car > 72) {
         car -= 1
         newCars.push(car)
       } else if (car === 72) {
-        newCars.splice(carsLeft.indexOf(car), 1)
+        newCars.splice(carsLeftOne.indexOf(car), 1)
         setTimeout(() => {
-          createCar('left')
+          createCar('leftOne')
+        }, 1000)
+      }
+      return newCars
+    }, [])
+
+    carsLeftTwo = carsLeftTwo.reduce((newCars, car) => {
+      if (car > 54) {
+        car -= 1
+        newCars.push(car)
+      } else if (car === 54) {
+        newCars.splice(carsLeftTwo.indexOf(car), 1)
+        setTimeout(() => {
+          createCar('leftTwo')
         }, 1000)
       }
       return newCars
@@ -203,18 +232,26 @@ function init() {
 
   function displayCars() {
     squares.forEach(square => square.classList.remove('car'))
-    carsRight.forEach(car => squares[car].classList.add('car'))
-    carsLeft.forEach(car => squares[car].classList.add('car'))
+    carsRightOne.forEach(car => squares[car].classList.add('car'))
+    carsRightTwo.forEach(car => squares[car].classList.add('car'))
+    carsLeftOne.forEach(car => squares[car].classList.add('car'))
+    carsLeftTwo.forEach(car => squares[car].classList.add('car'))
     playerLost()
   }
 
   function createCar(direction) {
-    if (direction === 'right') {
+    if (direction === 'rightOne') {
       const newCar = 81
-      carsRight.unshift(newCar)
-    } else {
+      carsRightOne.unshift(newCar)
+    } else if (direction === 'rightTwo') {
+      const newCar = 63
+      carsRightTwo.unshift(newCar)
+    } else if (direction === 'leftOne') {
       const newCar = 80
-      carsLeft.push(newCar)
+      carsLeftOne.push(newCar)
+    } else if (direction === 'leftTwo') {
+      const newCar = 62
+      carsLeftTwo.push(newCar)
     }
     displayCars()
   }
@@ -230,15 +267,15 @@ function init() {
   // }
 
   // function createCars() {
-  //   if (carsRight.length < 2) {
+  //   if (carsRightOne.length < 2) {
   //     const newCar = 80
-  //     carsRight.push(newCar)
+  //     carsRightOne.push(newCar)
   //   }
 
-  //   if (carsLeft.length >= carAmount && carAmount <= 3) {
+  //   if (carsLeftOne.length >= carAmount && carAmount <= 3) {
   //     if (carAmount % 2 === 0) {
   //       const newCar = 81
-  //       carsLeft.push(newCar)
+  //       carsLeftOne.push(newCar)
   //     }
   //     carAmount++
   //   }
@@ -353,9 +390,9 @@ function init() {
     grid.appendChild(resultGame)
     grid.style.backgroundColor = 'black'
     if (gameWon) {
-      resultGame.innerHTML = `You won!<br>You got ${playerScore} points.`
+      resultGame.innerHTML = `You won!<br><span class="total-points">You got ${playerScore} points</span>`
     } else if (gameLost) {
-      resultGame.innerHTML = `Game over!<br>You got ${playerScore} points.`
+      resultGame.innerHTML = `Game over!<br><span class="total-points">You got ${playerScore} points</span>`
     }
   }
 
@@ -377,7 +414,7 @@ function init() {
 
       if (frogFamily > 1 && frogsHome !== 5) {
         resetPlayer()
-      } else if (frogsHome < 5 && playerLives > 1) {
+      } else if (frogsHome < 5 && playerLives >= 1) {
         frogFamily += playerLives
         resetPlayer()
       } else {
@@ -390,15 +427,17 @@ function init() {
   }
 
   function playerLost() {
-    if (carsRight.includes(playerIndex) || carsLeft.includes(playerIndex) || waterSquares.includes(playerIndex)) {
+    if (carsRightOne.includes(playerIndex) || carsLeftOne.includes(playerIndex)
+      || carsRightTwo.includes(playerIndex) || carsLeftTwo.includes(playerIndex)
+      || waterSquares.includes(playerIndex)) {
       if (playerLives > 1) {
         playerScore -= 10
-        displayScore()
         playerLives -= 1
+        displayScore()
         lifeDisplay.innerHTML = playerLives
         resetPlayer()
       } else {
-        playerLives -= 1
+        playerLives = 0
         lifeDisplay.innerHTML = playerLives
         gameLost = true
         stopGame()
@@ -407,12 +446,12 @@ function init() {
     } else if (squares[playerIndex].classList.contains('player-won')) {
       if (playerLives > 1 && frogsHome !== 5) {
         playerScore -= 10
-        displayScore()
         playerLives -= 1
+        displayScore()
         lifeDisplay.innerHTML = playerLives
         resetPlayer()
       } else {
-        playerLives -= 1
+        playerLives = 0
         lifeDisplay.innerHTML = playerLives
         gameLost = true
         stopGame()
@@ -452,8 +491,10 @@ function init() {
     // board
     homes = [8, 6, 4, 2, 0]
     squares = []
-    carsRight = [80, 84]
-    carsLeft = [81, 78, 76]
+    carsRightOne = [80, 84]
+    carsRightTwo = [63, 69]
+    carsLeftOne = [81, 78, 76]
+    carsLeftTwo = [55, 57, 60]
     waterSquares = []
     logsRight = [9, 10, 12, 13, 15, 16, 17, 22, 23, 24, 25]
     logsLeft = [27, 28, 31, 32, 37, 38, 43, 44]
