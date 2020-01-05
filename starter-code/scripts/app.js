@@ -20,21 +20,26 @@
 // All 5 frogs home, get 1000 points
 
 // Show result + score
-////////
 // Add water, move with logs etc.
+
+////////
+// Count down before player can play
 // Add animation when player dies
 
 // Add highscore with local storage
+
+// Add easy, medium, hard
+// > normal, dizzy, puppy
 // Timer for getting the frogs home? 
 
 function init() {
-  // DOM variables
+  // DOM VARIABLES
   const grid = document.querySelector('.grid')
   const start = document.querySelector('.start')
   const lifeDisplay = document.querySelector('#player-lives')
   const scoreDisplay = document.querySelector('#player-score')
 
-  // game variables
+  // GAME VARIABLES
   let gamePlaying = false
   let resultGame = ''
   // board
@@ -49,11 +54,10 @@ function init() {
   let waterSquares = []
   let logsRight = [9, 10, 12, 13, 15, 16, 17, 22, 23, 24, 25]
   let logsLeft = [27, 28, 31, 32, 37, 38, 43, 44]
-  // let carAmount = 0
+  // intervals and timeouts
   let moveCarInterval = null
   let addingCarsTimeOut = null
   let moveLogInterval = null
-  // let counterCarsAdded = 0
   // player
   let playerIndex = width * height - 5
   let playerLives = 5
@@ -67,17 +71,13 @@ function init() {
   // Functions
   function playGame() {
     if (!gamePlaying) {
-      // Make game playable
       gamePlaying = true
-
       // Show reset button
       start.removeEventListener('click', playGame)
       start.addEventListener('click', resetGame)
       start.innerHTML = 'Reset'
-
       // Set up board
       createBoard()
-      createHomes()
       moveCarInterval = setInterval(moveCars, 900)
       moveLogInterval = setInterval(moveLogs, 1000)
       addPlayer()
@@ -94,10 +94,17 @@ function init() {
       squares.push(square)
       grid.appendChild(square)
     })
+    createHomes()
+    createSafePlaces()
   }
 
   function createHomes() {
     homes.forEach(home => squares[home].classList.add('homes'))
+  }
+
+  function createSafePlaces() {
+    const safeSquaresOne = [Array.from({ length: width }, (x, i) => i + 45), Array.from({ length: width }, (x, i) => i + 90)]
+    safeSquaresOne.forEach(array => array.forEach(safePlace => squares[safePlace].classList.add('safe-place')))
   }
 
   // *********** CARS
@@ -213,8 +220,8 @@ function init() {
   }
 
   function displayWater() {
-    waterSquares = Array.from({ length: 4 * width }, (v, i) => i + width)
     squares.forEach(square => square.classList.remove('water'))
+    waterSquares = Array.from({ length: 4 * width }, (x, i) => i + width)
     waterSquares = waterSquares.filter(water => !logsRight.includes(water) && !logsLeft.includes(water))
     waterSquares.forEach(water => squares[water].classList.add('water'))
   }
@@ -235,10 +242,10 @@ function init() {
     playerLost()
   }
 
-
   // *********** MOVE PLAYER
 
   function handleKeyDown(e) {
+    console.log(playerIndex)
     switch (e.keyCode) {
       case 39:
         if (playerIndex % width < width - 1) playerIndex++
@@ -276,7 +283,6 @@ function init() {
   function displayScore() {
     scoreDisplay.innerHTML = playerScore
   }
-
 
   function showResult() {
     squares.forEach(square => grid.removeChild(square))
@@ -378,17 +384,15 @@ function init() {
       squares.forEach(square => grid.removeChild(square))
     }
     // Reset variables
+    // board
     homes = [8, 6, 4, 2, 0]
     squares = []
     carsRight = [80, 84]
     carsLeft = [81, 78, 76]
     waterSquares = []
-    logsRight = [9, 10, 12, 13, 22, 23, 24, 25]
-    logsLeft = [30, 31, 37, 38, 43, 44]
-    // counterCarsAdded = 0
-    // carAmount = 0
-
-
+    logsRight = [9, 10, 12, 13, 15, 16, 17, 22, 23, 24, 25]
+    logsLeft = [27, 28, 31, 32, 37, 38, 43, 44]
+    // player
     playerLives = 5
     frogFamily = 5
     frogsHome = 0
@@ -396,11 +400,11 @@ function init() {
     playerIndex = width * height - 5
     gameWon = false
     gameLost = false
-
+    // intervals and timeouts
     moveCarInterval = null
     addingCarsTimeOut = null
     moveLogInterval = null
-    // Reset lives/score
+    // Reset display lives/score
     lifeDisplay.innerHTML = playerLives
     scoreDisplay.innerHTML = playerScore
     // Show start button again
@@ -414,7 +418,6 @@ function init() {
 
   // ! DELETE LATER
   playGame()
-  // displayWater()
   // gameLost = true
   // showResult()
 }

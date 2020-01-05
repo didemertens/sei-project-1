@@ -83,3 +83,7 @@ h3 {
 .grid-item.log {
   background-color: burlywood;
 }
+
+.grid-item.safe-place{
+  background-color: lightgreen;
+}
