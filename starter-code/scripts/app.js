@@ -27,10 +27,14 @@
 
 // Make one/two log rows faster
 
-////////
 // Add animation when player dies
 
+////////
+
 // Add highscore with local storage
+
+// Sort the highscore list
+// Show max 10
 
 // Add easy, medium, hard
 // > normal, dizzy, puppy
@@ -52,6 +56,7 @@ function init() {
   // GAME VARIABLES
   let gamePlaying = false
   let resultGame = ''
+
   // board
   const width = 9
   const height = 11
@@ -161,8 +166,9 @@ function init() {
       grid.appendChild(square)
     })
     moveLogs()
-    moveLogInterval = setInterval(moveLogs, 1000)
-    moveLogFastInterval = setInterval(moveLogsFast, 600)
+    // ! Uncomment later
+    // moveLogInterval = setInterval(moveLogs, 1000)
+    // moveLogFastInterval = setInterval(moveLogsFast, 600)
     moveCars()
     // ! Uncomment later
     // moveCarInterval = setInterval(moveCars, 900)
@@ -429,30 +435,6 @@ function init() {
     playerLost()
   }
 
-  // *********** SHOW/UPDATE SCORE
-
-  function addPoints(points) {
-    playerScore += points
-    displayScore()
-  }
-
-  function displayScore() {
-    scoreDisplay.innerHTML = playerScore
-  }
-
-  function showResult() {
-    squares.forEach(square => grid.removeChild(square))
-    resultGame = document.createElement('h3')
-    resultGame.classList.add('result-game')
-    grid.appendChild(resultGame)
-    grid.style.backgroundColor = 'black'
-    if (gameWon) {
-      resultGame.innerHTML = `You won!<br><span class="total-points">You got ${playerScore} points</span>`
-    } else if (gameLost) {
-      resultGame.innerHTML = `Game over!<br><span class="total-points">You got ${playerScore} points</span>`
-    }
-  }
-
   // *********** CHECK WON/LOST
 
   function playerWon() {
@@ -477,6 +459,7 @@ function init() {
       } else {
         addPoints(1000)
         gameWon = true
+        setHighscore(playerScore)
         stopGame()
         showResult()
       }
@@ -541,6 +524,31 @@ function init() {
     addPlayer()
   }
 
+  // *********** SHOW/UPDATE SCORE
+
+  function addPoints(points) {
+    playerScore += points
+    displayScore()
+  }
+
+  function displayScore() {
+    scoreDisplay.innerHTML = playerScore
+  }
+
+  function showResult() {
+    squares.forEach(square => grid.removeChild(square))
+    resultGame = document.createElement('h3')
+    resultGame.classList.add('result-game')
+    grid.appendChild(resultGame)
+    grid.style.backgroundColor = 'black'
+    if (gameWon) {
+      resultGame.innerHTML = `You won!<br><span class="total-points">You got ${playerScore} points</span>`
+    } else if (gameLost) {
+      resultGame.innerHTML = `Game over!<br><span class="total-points">You got ${playerScore} points</span>`
+    }
+    setTimeout(setHighscore, 1000)
+  }
+
   // *********** STOP/RESET GAME
 
   function stopGame() {
@@ -558,7 +566,7 @@ function init() {
       removeCounter()
     }
     if (gameWon || gameLost) {
-      grid.removeChild(resultGame)
+      grid.removeChild(highscoreList)
       grid.style.backgroundColor = 'white'
     } else {
       squares.forEach(square => grid.removeChild(square))
@@ -607,8 +615,48 @@ function init() {
 
   // ! DELETE LATER
   playGame()
+  playerLives = 2
   // gameLost = true
   // showResult()
+
+  let highscoreList = ''
+  let highscoreItem = ''
+
+  function setHighscore() {
+    const stringScore = String(playerScore)
+    const userName = prompt('Type your name:')
+    localStorage.setItem(userName, stringScore)
+    showHighscore()
+  }
+
+  function showHighscore() {
+    grid.removeChild(resultGame)
+    highscoreList = document.createElement('ol')
+    // highscoreList.classList.add('highscore')
+    grid.appendChild(highscoreList)
+
+
+    if (localStorage.length >= 10) {
+      for (let i = 0; i < localStorage.length; i++) {
+        highscoreItem = document.createElement('li')
+        highscoreItem.classList.add('highscore')
+        highscoreList.appendChild(highscoreItem)
+        highscoreItem.innerHTML = `${localStorage.key(i)} - ${localStorage.getItem(localStorage.key(i))}`
+      }
+    } else {
+      for (let i = 0; i < localStorage.length; i++) {
+        highscoreItem = document.createElement('li')
+        highscoreItem.classList.add('highscore')
+        highscoreList.appendChild(highscoreItem)
+
+        highscoreItem.innerHTML = `${localStorage.key(i)} - ${localStorage.getItem(localStorage.key(i))}`
+      }
+    }
+  }
+
+  // localStorage.clear()
+
+
 }
 
 window.addEventListener('DOMContentLoaded', init)

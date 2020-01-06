@@ -32,7 +32,7 @@ h4 {
   margin: 10px;
 }
 
-.result-game, .count-down {
+.result-game, .count-down, .highscore {
   color: white;
   text-align: center;
   margin-top: -30px;
@@ -74,7 +74,7 @@ h4 {
   background-image: url('../assets/pika-sprite.png');
   background-repeat: no-repeat;
   background-size: contain;
-  animation: player-dies 1s linear;
+  animation: player-dies 1s ease-out;
 }
 
 .grid-item.car-right {
@@ -107,23 +107,7 @@ h4 {
 }
 
 @keyframes player-dies {
-  0% {
-    transform: rotate((0))
-  }
-  50% {
-    background-image: url('../assets/cross.png');
-    transform: rotate(180deg)
-  }
-  90% {
-    background-image: url('../assets/cross.png');
-    transform: rotate(360deg)
-  }
-  95% {
-    background-image: url('../assets/cross.png');
-    transform: rotate(360deg)
-  }
   100% {
     background-image: url('../assets/cross.png');
-    transform: rotate(360deg)
   }
 }
