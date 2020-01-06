@@ -25,9 +25,9 @@
 // Count down before player can play
 // Add more cars
 
-////////
 // Make one/two log rows faster
 
+////////
 // Add animation when player dies
 
 // Add highscore with local storage
@@ -69,12 +69,15 @@ function init() {
   let carsLeftTwo = [55, 57, 61]
   // water
   let waterSquares = []
-  let logsRight = [9, 10, 12, 13, 15, 16, 17, 22, 23, 24, 25]
-  let logsLeft = [27, 28, 31, 32, 37, 38, 43, 44]
+  let logsRightOne = [10, 11, 13, 14, 15, 16]
+  let logsRightTwo = [18, 19, 22, 23, 24, 25]
+  let logsLeftOne = [37, 38, 39, 42, 43, 44]
+  let logsLeftTwo = [28, 29, 31, 32, 33]
   // intervals and timeouts
   let moveCarInterval = null
   let addingCarsTimeOut = null
   let moveLogInterval = null
+  let moveLogFastInterval = null
   let counterTimeOut = null
   let timeOutRemoveCounter = null
   let timeOutGame = null
@@ -156,10 +159,12 @@ function init() {
       squares.push(square)
       grid.appendChild(square)
     })
-    moveCars()
     moveLogs()
-    moveCarInterval = setInterval(moveCars, 900)
     moveLogInterval = setInterval(moveLogs, 1000)
+    moveLogFastInterval = setInterval(moveLogsFast, 600)
+    moveCars()
+    // ! Uncomment later
+    // moveCarInterval = setInterval(moveCars, 900)
     createHomes()
     createSafePlaces()
   }
@@ -291,23 +296,23 @@ function init() {
   // *********** WATER/LOGS
 
   function moveLogs() {
-    logsRight = logsRight.reduce((newLogs, log) => {
-      if (log < 26) {
+    logsRightOne = logsRightOne.reduce((newLogs, log) => {
+      if (log < 17) {
         log += 1
         newLogs.push(log)
-      } else if (log === 26) {
+      } else if (log === 17) {
         log = 9
         newLogs.push(log)
       }
       return newLogs
     }, [])
 
-    logsLeft = logsLeft.reduce((newLogs, log) => {
+    logsLeftTwo = logsLeftTwo.reduce((newLogs, log) => {
       if (log > 27) {
         log -= 1
         newLogs.push(log)
       } else if (log === 27) {
-        log = 44
+        log = 35
         newLogs.push(log)
       }
       return newLogs
@@ -317,28 +322,73 @@ function init() {
     movePlayerOnLog()
   }
 
+  function moveLogsFast() {
+    logsRightTwo = logsRightTwo.reduce((newLogs, log) => {
+      if (log < 26) {
+        log += 1
+        newLogs.push(log)
+      } else if (log === 26) {
+        log = 18
+        newLogs.push(log)
+      }
+      return newLogs
+    }, [])
+
+    logsLeftOne = logsLeftOne.reduce((newLogs, log) => {
+      if (log > 36) {
+        log -= 1
+        newLogs.push(log)
+      } else if (log === 36) {
+        log = 44
+        newLogs.push(log)
+      }
+      return newLogs
+    }, [])
+
+    displayLogs()
+    movePlayerOnLogFast()
+  }
+
   function displayLogs() {
-    squares.forEach(square => square.classList.remove('log'))
-    logsRight.forEach(log => squares[log].classList.add('log'))
-    logsLeft.forEach(log => squares[log].classList.add('log'))
+    squares.forEach(square => square.classList.remove('log', 'leaf'))
+    logsRightOne.forEach(log => squares[log].classList.add('log'))
+    logsRightTwo.forEach(log => squares[log].classList.add('leaf'))
+    logsLeftOne.forEach(log => squares[log].classList.add('leaf'))
+    logsLeftTwo.forEach(log => squares[log].classList.add('log'))
     displayWater()
   }
 
   function displayWater() {
     squares.forEach(square => square.classList.remove('water'))
     waterSquares = Array.from({ length: 4 * width }, (x, i) => i + width)
-    waterSquares = waterSquares.filter(water => !logsRight.includes(water) && !logsLeft.includes(water))
+    waterSquares = waterSquares.filter(water => !logsRightOne.includes(water) && !logsRightTwo.includes(water) && !logsLeftOne.includes(water))
     waterSquares.forEach(water => squares[water].classList.add('water'))
   }
 
   function movePlayerOnLog() {
-    if (logsRight.includes(playerIndex + 1)) {
+    if (logsRightOne.includes(playerIndex + 1)) {
       if (playerIndex % width < width - 1) {
         playerIndex++
         addPlayer()
       }
     }
-    if (logsLeft.includes(playerIndex - 1)) {
+    if (logsLeftTwo.includes(playerIndex - 1)) {
+      if (playerIndex % width > 0) {
+        playerIndex--
+        addPlayer()
+      }
+    }
+    playerLost()
+  }
+
+  function movePlayerOnLogFast() {
+    if (logsRightTwo.includes(playerIndex + 1)) {
+      if (playerIndex % width < width - 1) {
+        playerIndex++
+        addPlayer()
+      }
+    }
+    if (logsLeftOne.includes(playerIndex - 1)) {
       if (playerIndex % width > 0) {
         playerIndex--
         addPlayer()
@@ -468,8 +518,7 @@ function init() {
 
   function resetPlayer() {
     playerIndex = width * height - 5
-    squares.forEach(square => square.classList.remove('player'))
-    squares[playerIndex].classList.add('player')
+    addPlayer()
   }
 
   // *********** STOP/RESET GAME
@@ -477,6 +526,7 @@ function init() {
   function stopGame() {
     gamePlaying = false
     clearInterval(moveCarInterval)
+    clearInterval(moveLogFastInterval)
     clearTimeout(addingCarsTimeOut)
     clearInterval(moveLogInterval)
     window.removeEventListener('keydown', handleKeyDown)
@@ -502,8 +552,10 @@ function init() {
     carsLeftOne = [81, 78, 76]
     carsLeftTwo = [55, 57, 60]
     waterSquares = []
-    logsRight = [9, 10, 12, 13, 15, 16, 17, 22, 23, 24, 25]
-    logsLeft = [27, 28, 31, 32, 37, 38, 43, 44]
+    logsRightOne = [10, 11, 13, 14, 15, 16]
+    logsRightTwo = [18, 19, 22, 23, 24, 25]
+    logsLeftOne = [37, 38, 39, 42, 43, 44]
+    logsLeftTwo = [28, 29, 31, 32, 33]
     countDownGame = ''
     counterTime = 3
     // player
@@ -518,6 +570,7 @@ function init() {
     moveCarInterval = null
     addingCarsTimeOut = null
     moveLogInterval = null
+    moveLogFastInterval = null
     counterTimeOut = null
     timeOutRemoveCounter = null
     timeOutGame = null

@@ -14,13 +14,13 @@ html, body {
   font-family: 'Galindo', cursive;
 }
 
-.game-result {
+.game-lives-score {
   display: flex;
 }
 
 .grid {
-  height: 550px;
-  width: 455px;
+  height: 554px;
+  width: 454px;
   border: 2px solid black;
   display: flex;
   flex-wrap: wrap;
@@ -28,7 +28,7 @@ html, body {
   align-items: center;
 }
 
-h3 {
+h4 {
   margin: 10px;
 }
 
@@ -56,6 +56,7 @@ h3 {
   border: 1px solid black;
 }
 
+/* Board vars, change later */
 .grid-item.player {
   background-image: url('../assets/pika-sprite.png');
   background-repeat: no-repeat;
@@ -68,8 +69,6 @@ h3 {
   background-size: contain;
 }
 
-
-/* Obstacles, change later */
 .grid-item.car-right {
   background-color: green;
 }
@@ -77,10 +76,6 @@ h3 {
 .grid-item.car-left {
   background-color: red;
 }
-
-/* .grid-item.car-hidden {
-  background-color: white;
-} */
 
 .grid-item.homes {
   background-color: pink;
@@ -92,6 +87,11 @@ h3 {
 
 .grid-item.log {
   background-color: burlywood;
+}
+
+
+.grid-item.leaf {
+  background-color: forestgreen;
 }
 
 .grid-item.safe-place{
