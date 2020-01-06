@@ -255,6 +255,8 @@ function init() {
       return newCars
     }, [])
 
+
+    //// ! TIME OUT
     displayCars()
   }
 
@@ -288,13 +290,13 @@ function init() {
   //   if (counterCarsAdded < 3) {
   //     counterCarsAdded++
   //     addingCarsTimeOut = setTimeout(() => {
-  //       createCars()
+  //       createArrayCars()
   //       loopAddCars()
   //     }, 1500)
   //   }
   // }
 
-  // function createCars() {
+  // function createArrayCars() {
   //   if (carsRightOne.length < 2) {
   //     const newCar = 80
   //     carsRightOne.push(newCar)
@@ -416,33 +418,65 @@ function init() {
   }
 
   // *********** MOVE PLAYER
+  let movement = ''
 
   function handleKeyDown(e) {
-    console.log(e.keyCode)
-    const movement = ''
+    // ! Remove later
+    console.log(playerIndex)
     switch (e.keyCode) {
       case 39:
         if (playerIndex % width < width - 1) playerIndex++
+        movement = 'right'
         break
       case 37:
         if (playerIndex % width > 0) playerIndex--
+        movement = 'left'
         break
       case 38:
         if (playerIndex - width >= 0) {
           playerIndex -= width
           addPoints(10)
         }
+        movement = 'up'
         break
       case 40:
         if (playerIndex + width < width * height) playerIndex += width
+        movement = 'down'
         break
     }
+    // smoothMovement(playerIndex)
+
+    ////  ! TIMEOUT
+    // setTimeout(addPlayer, 200)
     addPlayer()
   }
+
+  // function smoothMovement(index) {
+  //   switch (movement) {
+  //     case 'right':
+  //       squares[index - 1].classList.add('moving-right')
+  //       break
+  //     case 'left':
+  //       squares[index + 1].classList.add('moving-left')
+  //       break
+  //     case 'up':
+  //       squares[index + width].classList.add('moving-up')
+  //       break
+  //     case 'down':
+  //       squares[index - width].classList.add('moving-down')
+  //       break
+  //   }
+  // }
+
 
   function addPlayer() {
     squares.forEach(square => square.classList.remove('player'))
     squares[playerIndex].classList.add('player')
+    // // Movement
+    // squares.forEach(square => square.classList.remove('moving-right'))
+    // squares.forEach(square => square.classList.remove('moving-left'))
+    // squares.forEach(square => square.classList.remove('moving-up'))
+    // squares.forEach(square => square.classList.remove('moving-down'))
 
     playerWon()
     playerLost()
@@ -596,7 +630,7 @@ function init() {
   function sortHighscore() {
     const highscoreArray = []
     if (localStorage.length > 0) {
-      for (i = 0; i < localStorage.length; i++) {
+      for (let i = 0; i < localStorage.length; i++) {
         highscoreArray.push([localStorage.key(i), localStorage.getItem(localStorage.key(i))])
       }
     }
@@ -660,11 +694,11 @@ function init() {
   function stopGame() {
     gamePlaying = false
     start.innerHTML = 'Play again'
+    window.removeEventListener('keydown', handleKeyDown)
     clearInterval(moveCarInterval)
     clearInterval(moveLogFastInterval)
     clearTimeout(addingCarsTimeOut)
     clearInterval(moveLogInterval)
-    window.removeEventListener('keydown', handleKeyDown)
   }
 
   function resetGame() {
@@ -736,8 +770,6 @@ function init() {
   playGame()
   // gameLost = true
   // showResult()
-
-  console.log(highscoreCleared)
 
 }
 

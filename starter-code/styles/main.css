@@ -139,25 +139,104 @@ h4 {
 .grid-item.safe-place{
   background-color: lightgreen;
 }
-/* ///// */
-.moving {
-  animation: movementX 1s linear;
-}
+/* ///////////////////////////////////////// */
 
-@keyframes movementX {
+.moving-right {
+  animation: right 1s linear;
+  /* transform: translateX(25px); */
+} 
+
+.moving-left {
+  animation: left 1s linear;
+  /* transform: translateX(-25px); */
+} 
+
+.moving-up {
+  animation: up 1s linear;
+  /* transform: translateY(-25px); */
+} 
+
+.moving-down {
+  animation: down 1s linear;
+  /* transform: translateY(25px); */
+} 
+
+@keyframes right {
   0% {
-    transform: scaleX(0px);
+    transform: translateX(0px)
+  }
+  15% {
+    transform: translateX(15px)
   }
   50% {
-    transform: scaleX(25px);
+    transform: translateX(25px)
+  }
+  90% {
+    transform: translateX(40px)
   }
   100% {
-      transform: scaleX(50px);
+    transform: translateX(50px)
   }
 }
+
+@keyframes left {
+  0% {
+    transform: translateX(0px)
+  }
+  15% {
+    transform: translateX(-15px)
+  }
+  50% {
+    transform: translateX(-25px)
+  }
+  90% {
+    transform: translateX(-40px)
+  }
+  100% {
+    transform: translateX(-50px)
+  }
+}
+
+@keyframes up {
+  0% {
+    transform: translateY(0px)
+  }
+  15% {
+    transform: translateY(-15px)
+  }
+  50% {
+    transform: translateY(-25px)
+  }
+  90% {
+    transform: translateY(-40px)
+  }
+  100% {
+    transform: translateY(-50px)
+  }
+}
+
+@keyframes down {
+  0% {
+    transform: translateY(0px)
+  }
+  15% {
+    transform: translateY(15px)
+  }
+  50% {
+    transform: translateY(25px)
+  }
+  90% {
+    transform: translateY(40px)
+  }
+  100% {
+    transform: translateY(50px)
+  }
+}
+
 
 @keyframes player-dies {
   100% {
     background-image: url('../assets/cross.png');
+    transform: scale(1.1)
   }
 }
