@@ -29,12 +29,11 @@
 
 // Add animation when player dies
 
-////////
-
 // Add highscore with local storage
-
 // Sort the highscore list
 // Show max 10
+
+////////
 
 // Add easy, medium, hard
 // > normal, dizzy, puppy
@@ -96,6 +95,17 @@ function init() {
   let gameLost = false
   let playerDied = false
 
+  // Highscore
+  let userNameDiv = ''
+  let nameDisplay = ''
+  let userName = ''
+  let highscoreList = ''
+  let highscoreItem = ''
+  let highscoreClear = ''
+  let inputUserName = ''
+  let highscoreCleared = false
+  let highscoreShown = false
+  let playerScoreShown = false
 
   // Functions
   // *********** START GAME
@@ -368,7 +378,8 @@ function init() {
   function displayWater() {
     squares.forEach(square => square.classList.remove('water'))
     waterSquares = Array.from({ length: 4 * width }, (x, i) => i + width)
-    waterSquares = waterSquares.filter(water => !logsRightOne.includes(water) && !logsRightTwo.includes(water) && !logsLeftOne.includes(water) && !logsLeftTwo.includes(water))
+    waterSquares = waterSquares.filter(water => !logsRightOne.includes(water) && !logsRightTwo.includes(water)
+      && !logsLeftOne.includes(water) && !logsLeftTwo.includes(water))
     waterSquares.forEach(water => squares[water].classList.add('water'))
   }
 
@@ -407,7 +418,8 @@ function init() {
   // *********** MOVE PLAYER
 
   function handleKeyDown(e) {
-    console.log(playerIndex)
+    console.log(e.keyCode)
+    const movement = ''
     switch (e.keyCode) {
       case 39:
         if (playerIndex % width < width - 1) playerIndex++
@@ -431,6 +443,7 @@ function init() {
   function addPlayer() {
     squares.forEach(square => square.classList.remove('player'))
     squares[playerIndex].classList.add('player')
+
     playerWon()
     playerLost()
   }
@@ -511,7 +524,6 @@ function init() {
     setTimeout(resetPlayer, 1000)
   }
 
-
   function resetPlayer() {
     if (playerDied) {
       // moveCarInterval = setInterval(moveCars, 900)
@@ -536,6 +548,7 @@ function init() {
   }
 
   function showResult() {
+    playerScoreShown = true
     squares.forEach(square => grid.removeChild(square))
     resultGame = document.createElement('h3')
     resultGame.classList.add('result-game')
@@ -546,13 +559,107 @@ function init() {
     } else if (gameLost) {
       resultGame.innerHTML = `Game over!<br><span class="total-points">You got ${playerScore} points</span>`
     }
-    setTimeout(setHighscore, 1000)
+    getUserName()
+  }
+
+  // *********** HIGHSCORE
+
+  function getUserName() {
+    userNameDiv = document.createElement('div')
+    userNameDiv.classList.add('show-highscore')
+    grid.appendChild(userNameDiv)
+
+    nameDisplay = document.createElement('input')
+    nameDisplay.classList.add('user-name')
+    userNameDiv.appendChild(nameDisplay)
+    nameDisplay.setAttribute('type', 'text')
+    nameDisplay.setAttribute('placeholder', 'Your initials')
+    nameDisplay.setAttribute('maxlength', 3)
+
+    inputUserName = document.createElement('button')
+    inputUserName.classList.add('submit-btn')
+    inputUserName.innerHTML = 'Submit'
+    userNameDiv.appendChild(inputUserName)
+
+    inputUserName.addEventListener('click', setHighscore)
+  }
+
+  function setHighscore() {
+    userName = document.querySelector('.user-name').value
+    grid.removeChild(userNameDiv)
+
+    const stringScore = String(playerScore)
+    localStorage.setItem(userName, stringScore)
+    sortHighscore()
+  }
+
+  function sortHighscore() {
+    const highscoreArray = []
+    if (localStorage.length > 0) {
+      for (i = 0; i < localStorage.length; i++) {
+        highscoreArray.push([localStorage.key(i), localStorage.getItem(localStorage.key(i))])
+      }
+    }
+
+    highscoreArray.sort((a, b) => {
+      return b[1] - a[1]
+    })
+    showHighscore(highscoreArray)
+  }
+
+  let highscoreDiv = ''
+  let highscoreTitle = ''
+
+  function showHighscore(sortedScore) {
+    highscoreShown = true
+    grid.removeChild(resultGame)
+
+    highscoreDiv = document.createElement('div')
+    highscoreDiv.classList.add('show-highscore')
+    grid.appendChild(highscoreDiv)
+
+    highscoreTitle = document.createElement('h2')
+    highscoreTitle.classList.add('highscore-title')
+    highscoreTitle.innerHTML = 'Ranking'
+    highscoreDiv.appendChild(highscoreTitle)
+
+    highscoreList = document.createElement('ol')
+    highscoreDiv.appendChild(highscoreList)
+
+    if (sortedScore.length > 10) {
+      for (let i = 0; i < 10; i++) {
+        highscoreItem = document.createElement('li')
+        highscoreItem.classList.add('highest-scores')
+        highscoreList.appendChild(highscoreItem)
+        highscoreItem.innerHTML = `${sortedScore[i][0]} - ${sortedScore[i][1]} `
+      }
+    } else {
+      sortedScore.forEach(nameScore => {
+        highscoreItem = document.createElement('li')
+        highscoreItem.classList.add('highest-scores')
+        highscoreList.appendChild(highscoreItem)
+        highscoreItem.innerHTML = `${nameScore[0]} - ${nameScore[1]} `
+      })
+    }
+
+    highscoreClear = document.createElement('button')
+    highscoreClear.classList.add('clear-btn')
+    highscoreDiv.appendChild(highscoreClear)
+    highscoreClear.innerHTML = 'Clear'
+    highscoreClear.addEventListener('click', clearHighscore)
+  }
+
+  function clearHighscore() {
+    highscoreCleared = true
+    localStorage.clear()
+    grid.removeChild(highscoreDiv)
   }
 
   // *********** STOP/RESET GAME
 
   function stopGame() {
     gamePlaying = false
+    start.innerHTML = 'Play again'
     clearInterval(moveCarInterval)
     clearInterval(moveLogFastInterval)
     clearTimeout(addingCarsTimeOut)
@@ -565,12 +672,20 @@ function init() {
     if (counterRunning) {
       removeCounter()
     }
-    if (gameWon || gameLost) {
-      grid.removeChild(highscoreList)
+    // highscore
+    if (highscoreCleared) {
+      grid.style.backgroundColor = 'white'
+    } else if (highscoreShown) {
+      grid.removeChild(highscoreDiv)
+      grid.style.backgroundColor = 'white'
+    } else if (playerScoreShown) {
+      grid.removeChild(resultGame)
+      grid.removeChild(userNameDiv)
       grid.style.backgroundColor = 'white'
     } else {
       squares.forEach(square => grid.removeChild(square))
     }
+
     // Reset variables
     // board
     homes = [8, 6, 4, 2, 0]
@@ -606,7 +721,11 @@ function init() {
     // Reset display lives/score
     lifeDisplay.innerHTML = playerLives
     scoreDisplay.innerHTML = playerScore
-    // Show start button again
+    // Highscore/player score
+    playerScoreShown = false
+    highscoreCleared = false
+    highscoreShown = false
+    // Play again
     playGame()
   }
 
@@ -615,47 +734,10 @@ function init() {
 
   // ! DELETE LATER
   playGame()
-  playerLives = 2
   // gameLost = true
   // showResult()
 
-  let highscoreList = ''
-  let highscoreItem = ''
-
-  function setHighscore() {
-    const stringScore = String(playerScore)
-    const userName = prompt('Type your name:')
-    localStorage.setItem(userName, stringScore)
-    showHighscore()
-  }
-
-  function showHighscore() {
-    grid.removeChild(resultGame)
-    highscoreList = document.createElement('ol')
-    // highscoreList.classList.add('highscore')
-    grid.appendChild(highscoreList)
-
-
-    if (localStorage.length >= 10) {
-      for (let i = 0; i < localStorage.length; i++) {
-        highscoreItem = document.createElement('li')
-        highscoreItem.classList.add('highscore')
-        highscoreList.appendChild(highscoreItem)
-        highscoreItem.innerHTML = `${localStorage.key(i)} - ${localStorage.getItem(localStorage.key(i))}`
-      }
-    } else {
-      for (let i = 0; i < localStorage.length; i++) {
-        highscoreItem = document.createElement('li')
-        highscoreItem.classList.add('highscore')
-        highscoreList.appendChild(highscoreItem)
-
-        highscoreItem.innerHTML = `${localStorage.key(i)} - ${localStorage.getItem(localStorage.key(i))}`
-      }
-    }
-  }
-
-  // localStorage.clear()
-
+  console.log(highscoreCleared)
 
 }
 

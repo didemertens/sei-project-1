@@ -32,22 +32,56 @@ h4 {
   margin: 10px;
 }
 
-.result-game, .count-down, .highscore {
+.result-game, .count-down, .highscore-title {
   color: white;
   text-align: center;
-  margin-top: -30px;
+  margin-top: -25px;
   font-size: 45px;
+}
+
+.highscore-title {
+  margin-bottom: -10px;
+}
+
+.highest-scores {
+  color: white;
+  font-size: 28px;
 }
 
 .total-points {
   font-size: 25px;
 }
 
-.start {
+.user-name {
+  font-size: 17px;
+  border: none;
+  padding: 15px;
+  border-radius: 2px;
+  text-align: center;
+  margin-top: -100px;
+  margin-bottom: 5px;
+}
+
+.show-highscore {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.start, .submit-btn, .clear-btn {
   font-family: 'Galindo', cursive;
   margin: 10px;
   padding: 10px;
   border-radius: 10px;
+}
+
+.start:hover {
+  color: white;
+  background-color: black;
+}
+
+.start:active, .submit-btn:active, .clear-btn:active  {
+  text-transform: uppercase;
 }
 
 .grid-item {
@@ -104,6 +138,22 @@ h4 {
 
 .grid-item.safe-place{
   background-color: lightgreen;
+}
+/* ///// */
+.moving {
+  animation: movementX 1s linear;
+}
+
+@keyframes movementX {
+  0% {
+    transform: scaleX(0px);
+  }
+  50% {
+    transform: scaleX(25px);
+  }
+  100% {
+      transform: scaleX(50px);
+  }
 }
 
 @keyframes player-dies {
