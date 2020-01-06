@@ -89,6 +89,7 @@ function init() {
   let playerScore = 0
   let gameWon = false
   let gameLost = false
+  let playerDied = false
 
 
   // Functions
@@ -361,7 +362,7 @@ function init() {
   function displayWater() {
     squares.forEach(square => square.classList.remove('water'))
     waterSquares = Array.from({ length: 4 * width }, (x, i) => i + width)
-    waterSquares = waterSquares.filter(water => !logsRightOne.includes(water) && !logsRightTwo.includes(water) && !logsLeftOne.includes(water))
+    waterSquares = waterSquares.filter(water => !logsRightOne.includes(water) && !logsRightTwo.includes(water) && !logsLeftOne.includes(water) && !logsLeftTwo.includes(water))
     waterSquares.forEach(water => squares[water].classList.add('water'))
   }
 
@@ -491,7 +492,7 @@ function init() {
         playerLives -= 1
         displayScore()
         lifeDisplay.innerHTML = playerLives
-        resetPlayer()
+        playerDead()
       } else {
         playerLives = 0
         lifeDisplay.innerHTML = playerLives
@@ -505,7 +506,7 @@ function init() {
         playerLives -= 1
         displayScore()
         lifeDisplay.innerHTML = playerLives
-        resetPlayer()
+        playerDead()
       } else {
         playerLives = 0
         lifeDisplay.innerHTML = playerLives
@@ -516,7 +517,26 @@ function init() {
     }
   }
 
+  function playerDead() {
+    playerDied = true
+    clearInterval(moveCarInterval)
+    clearInterval(moveLogFastInterval)
+    clearInterval(moveLogInterval)
+    squares[playerIndex].classList.remove('player')
+    squares[playerIndex].classList.add('player-dead')
+    playerIndex = width * height - 5
+    setTimeout(resetPlayer, 1000)
+  }
+
+
   function resetPlayer() {
+    if (playerDied) {
+      // moveCarInterval = setInterval(moveCars, 900)
+      moveLogInterval = setInterval(moveLogs, 1000)
+      moveLogFastInterval = setInterval(moveLogsFast, 600)
+      playerDied = false
+    }
+    squares.forEach(square => square.classList.remove('player-dead'))
     playerIndex = width * height - 5
     addPlayer()
   }
@@ -566,6 +586,7 @@ function init() {
     playerIndex = width * height - 5
     gameWon = false
     gameLost = false
+    playerDied = false
     // intervals and timeouts
     moveCarInterval = null
     addingCarsTimeOut = null
