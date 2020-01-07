@@ -36,12 +36,17 @@
 // Player, show background image as well
 // Smooth movement cars
 // Create road
+// Show player, not car going over player
 
 ////////
 
-// Show player, not car going over player
+// index of obstacles + 2 or - 2?
+
+// Make log/leaf smoother
 
 // Remove bugs (play again)
+
+//////
 
 // Add easy, medium, hard
 // > normal, dizzy, puppy
@@ -82,10 +87,10 @@ function init() {
   let roadSquares = []
   // water
   let waterSquares = []
-  let logsRightOne = [10, 11, 13, 14, 15, 16]
-  let logsRightTwo = [18, 19, 22, 23, 24, 25]
-  let logsLeftOne = [37, 38, 39, 42, 43, 44]
-  let logsLeftTwo = [28, 29, 31, 32, 33]
+  let logsRightOne = [8, 9, 10, 11, 13, 14]
+  let logsRightTwo = [27, 28, 29, 30, 31, 32]
+  let leafLeftOne = [38, 40, 42, 44]
+  let leafLeftTwo = [18, 20, 22, 24]
   // intervals and timeouts
   let moveCarInterval = null
   let addingCarsTimeOut = null
@@ -95,9 +100,10 @@ function init() {
   let timeOutRemoveCounter = null
   let timeOutGame = null
   // player
+  // ! Uncomment later
   // let playerIndex = width * height - 5
   let playerIndex = 48
-  let playerLives = 5
+  let playerLives = 3
   let frogFamily = 5
   let frogsHome = 0
   let playerScore = 0
@@ -129,7 +135,7 @@ function init() {
       // Counter
       // ! Delete
       makeGame()
-      // ! uncomment later
+      // ! Uncomment later
       // if (!counterRunning) {
       //   counterRunning = true
       //   createCounter()
@@ -191,7 +197,7 @@ function init() {
     moveLogFastInterval = setInterval(moveLogsFast, 800)
     // ! Uncomment later
     moveCars()
-    moveCarInterval = setInterval(moveCars, 700)
+    moveCarInterval = setInterval(moveCars, 500)
     createHomes()
     createSafePlaces()
   }
@@ -293,12 +299,12 @@ function init() {
       return newLogs
     }, [])
 
-    logsLeftTwo = logsLeftTwo.reduce((newLogs, log) => {
-      if (log > 27) {
-        log -= 1
+    logsRightTwo = logsRightTwo.reduce((newLogs, log) => {
+      if (log < 35) {
+        log += 1
         newLogs.push(log)
-      } else if (log === 27) {
-        log = 35
+      } else if (log === 35) {
+        log = 27
         newLogs.push(log)
       }
       return newLogs
@@ -309,18 +315,7 @@ function init() {
   }
 
   function moveLogsFast() {
-    logsRightTwo = logsRightTwo.reduce((newLogs, log) => {
-      if (log < 26) {
-        log += 1
-        newLogs.push(log)
-      } else if (log === 26) {
-        log = 18
-        newLogs.push(log)
-      }
-      return newLogs
-    }, [])
-
-    logsLeftOne = logsLeftOne.reduce((newLogs, log) => {
+    leafLeftOne = leafLeftOne.reduce((newLogs, log) => {
       if (log > 36) {
         log -= 1
         newLogs.push(log)
@@ -331,19 +326,48 @@ function init() {
       return newLogs
     }, [])
 
+    leafLeftTwo = leafLeftTwo.reduce((newLogs, log) => {
+      if (log > 18) {
+        log -= 1
+        newLogs.push(log)
+      } else if (log === 18) {
+        log = 26
+        newLogs.push(log)
+      }
+      return newLogs
+    }, [])
+
     displayLogs()
     movePlayerOnLogFast()
   }
 
   function displayLogs() {
-    squares.forEach(square => square.classList.remove('log', 'leaf'))
-    logsRightOne.forEach(log => squares[log].classList.add('log'))
-    logsRightTwo.forEach(log => squares[log].classList.add('leaf'))
-    logsLeftOne.forEach(log => squares[log].classList.add('leaf'))
-    logsLeftTwo.forEach(log => squares[log].classList.add('log'))
+    squares.forEach(square => square.classList.remove('log', 'leaf', 'log-last', 'moving-left-log', 'moving-right-log'))
 
+    logsRightOne.forEach(log => squares[log].classList.add('log'))
+    logsRightTwo.forEach(log => squares[log].classList.add('log'))
+
+    leafLeftOne.forEach(log => squares[log].classList.add('leaf', 'moving-left-log'))
+    leafLeftTwo.forEach(log => squares[log].classList.add('leaf', 'moving-left-log'))
+
+    // ! OLD
+    // logGroup()
     displayWater()
   }
+
+  // ! OLD
+
+  // function logGroup() {
+  //   logsRightTwo.forEach((log) => {
+  //     squares[log].classList.add('moving-right-log')
+  //     if (squares[log] !== 27 && squares[log - 1].classList.contains('water')) {
+  //       // console.log(log)
+  //       squares[log].classList.add('log-last')
+  //     } else {
+  //       squares[log].classList.add('log')
+  //     }
+  //   })
+  // }
 
   function movePlayerOnLog() {
     if (logsRightOne.includes(playerIndex + 1) || logsRightTwo.includes(playerIndex + 1)) {
@@ -352,39 +376,53 @@ function init() {
         addPlayer()
       }
     }
+    // if (leafLeftOne.includes(playerIndex - 1) || leafLeftTwo.includes(playerIndex - 1)) {
+    //   if (playerIndex % width > 0) {
+    //     playerIndex--
+    //     addPlayer()
+    //   }
+    // }
+    playerLost()
+  }
 
-    if (logsLeftTwo.includes(playerIndex - 1) || logsLeftOne.includes(playerIndex - 1)) {
-      if (playerIndex % width > 0) {
-        playerIndex--
-        addPlayer()
+  function movePlayerOnLogFast() {
+    leafLeftOne.forEach(leaf => {
+      leaf += 1
+      if (leaf === playerIndex) {
+        if (playerIndex % width > 0) {
+          playerIndex--
+          addPlayer()
+        }
       }
-    }
+    })
+
+    leafLeftTwo.forEach(leaf => {
+      leaf += 1
+      if (leaf === playerIndex) {
+        if (playerIndex % width > 0) {
+          playerIndex--
+          addPlayer()
+        }
+      }
+    })
+
+    // if (leafLeftOne.includes(playerIndex - 1) || leafLeftTwo.includes(playerIndex - 1)) {
+    //   if (playerIndex % width > 0) {
+    //     playerIndex--
+    //     addPlayer()
+    //   }
+    // }
     playerLost()
   }
 
   function displayWater() {
     squares.forEach(square => square.classList.remove('water'))
     waterSquares = Array.from({ length: 4 * width }, (x, i) => i + width)
-    waterSquares = waterSquares.filter(water => !logsRightOne.includes(water) && !logsRightTwo.includes(water)
-      && !logsLeftOne.includes(water) && !logsLeftTwo.includes(water))
+    waterSquares = waterSquares.filter(water => !logsRightOne.includes(water) && !leafLeftTwo.includes(water)
+      && !leafLeftOne.includes(water) && !logsRightTwo.includes(water))
     waterSquares.forEach(water => squares[water].classList.add('water'))
   }
 
-  function movePlayerOnLogFast() {
-    if (logsRightTwo.includes(playerIndex + 1)) {
-      if (playerIndex % width < width - 1) {
-        playerIndex++
-        addPlayer()
-      }
-    }
-    if (logsLeftOne.includes(playerIndex - 1)) {
-      if (playerIndex % width > 0) {
-        playerIndex--
-        addPlayer()
-      }
-    }
-    playerLost()
-  }
 
   // *********** MOVE PLAYER
   function handleKeyDown(e) {
@@ -491,8 +529,8 @@ function init() {
     clearInterval(moveLogInterval)
     squares[playerIndex].classList.remove('player')
     squares[playerIndex].classList.add('player-dead')
-    // stop car animation
-    squares.forEach(square => square.classList.remove('moving-right', 'moving-left'))
+    // stop car/log animation
+    squares.forEach(square => square.classList.remove('moving-right', 'moving-left', 'moving-left-log', 'moving-right-log'))
     playerIndex = width * height - 5
     setTimeout(resetPlayer, 1000)
   }
@@ -500,7 +538,7 @@ function init() {
   function resetPlayer() {
     if (playerDied) {
       moveCars()
-      moveCarInterval = setInterval(moveCars, 700)
+      moveCarInterval = setInterval(moveCars, 500)
       // ! Uncomment later
       moveLogInterval = setInterval(moveLogs, 900)
       moveLogFastInterval = setInterval(moveLogsFast, 700)
@@ -670,14 +708,14 @@ function init() {
     carsLeftOne = [81, 78, 76]
     carsLeftTwo = [55, 57, 60]
     waterSquares = []
-    logsRightOne = [10, 11, 13, 14, 15, 16]
-    logsRightTwo = [18, 19, 22, 23, 24, 25]
-    logsLeftOne = [37, 38, 39, 42, 43, 44]
-    logsLeftTwo = [28, 29, 31, 32, 33]
+    logsRightOne = [8, 9, 10, 11, 13, 14]
+    logsRightTwo = [28, 29, 30, 31, 32]
+    leafLeftOne = [38, 40, 42, 44]
+    leafLeftTwo = [18, 20, 22, 24]
     countDownGame = ''
     counterTime = 3
     // player
-    playerLives = 5
+    playerLives = 3
     frogFamily = 5
     frogsHome = 0
     playerScore = 0
