@@ -33,7 +33,13 @@
 // Sort the highscore list
 // Show max 10
 
+// Player, show background image as well
 ////////
+
+// Smooth movement cars
+// Create road
+
+// Remove bugs (play again)
 
 // Add easy, medium, hard
 // > normal, dizzy, puppy
@@ -67,10 +73,10 @@ function init() {
   let squares = []
   let homes = [8, 6, 4, 2, 0]
   // cars
-  let carsRightOne = [80, 84]
+  let carsRightOne = [81, 84]
   let carsRightTwo = [63, 69]
-  let carsLeftOne = [76, 78, 81]
-  let carsLeftTwo = [55, 57, 61]
+  let carsLeftOne = [73, 79]
+  let carsLeftTwo = [54, 57, 61]
   // water
   let waterSquares = []
   let logsRightOne = [10, 11, 13, 14, 15, 16]
@@ -179,9 +185,9 @@ function init() {
     // ! Uncomment later
     // moveLogInterval = setInterval(moveLogs, 1000)
     // moveLogFastInterval = setInterval(moveLogsFast, 600)
-    moveCars()
     // ! Uncomment later
-    // moveCarInterval = setInterval(moveCars, 900)
+    moveCars()
+    moveCarInterval = setInterval(moveCars, 700)
     createHomes()
     createSafePlaces()
   }
@@ -201,6 +207,13 @@ function init() {
   }
 
   // *********** CARS
+  let roadSquares = []
+  function displayRoad() {
+    squares.forEach(square => square.classList.remove('road'))
+    roadSquares = Array.from({ length: 5 * width }, (x, i) => i + (width * 5))
+    roadSquares = roadSquares.filter(road => !carsRightOne.includes(road) && !carsRightTwo.includes(road) && !carsLeftOne.includes(road) && !carsLeftTwo.includes(road))
+    roadSquares.forEach(road => squares[road].classList.add('road'))
+  }
 
   function moveCars() {
     carsRightOne = carsRightOne.reduce((newCars, car) => {
@@ -208,11 +221,10 @@ function init() {
         car += 1
         newCars.push(car)
       } else if (car === 89) {
-        newCars.splice(carsRightOne.indexOf(car), 1)
-        setTimeout(() => {
-          createCar('rightOne')
-        }, 1000)
+        const newCar = 81
+        newCars.unshift(newCar)
       }
+
       return newCars
     }, [])
 
@@ -221,10 +233,12 @@ function init() {
         car += 1
         newCars.push(car)
       } else if (car === 71) {
-        newCars.splice(carsRightTwo.indexOf(car), 1)
-        setTimeout(() => {
-          createCar('rightTwo')
-        }, 1000)
+        const newCar = 63
+        newCars.unshift(newCar)
+        // newCars.splice(carsRightTwo.indexOf(car), 1)
+        // setTimeout(() => {
+        //   createCar('rightTwo')
+        // }, 1000)
       }
       return newCars
     }, [])
@@ -234,10 +248,12 @@ function init() {
         car -= 1
         newCars.push(car)
       } else if (car === 72) {
-        newCars.splice(carsLeftOne.indexOf(car), 1)
-        setTimeout(() => {
-          createCar('leftOne')
-        }, 1000)
+        const newCar = 80
+        newCars.push(newCar)
+        // newCars.splice(carsLeftOne.indexOf(car), 1)
+        // setTimeout(() => {
+        //   createCar('leftOne')
+        // }, 1000)
       }
       return newCars
     }, [])
@@ -247,70 +263,50 @@ function init() {
         car -= 1
         newCars.push(car)
       } else if (car === 54) {
-        newCars.splice(carsLeftTwo.indexOf(car), 1)
-        setTimeout(() => {
-          createCar('leftTwo')
-        }, 1000)
+        const newCar = 62
+        newCars.push(newCar)
+        // newCars.splice(carsLeftTwo.indexOf(car), 1)
+        // setTimeout(() => {
+        //   createCar('leftTwo')
+        // }, 1000)
       }
       return newCars
     }, [])
 
-
-    //// ! TIME OUT
     displayCars()
   }
 
   function displayCars() {
-    squares.forEach(square => square.classList.remove('car-right', 'car-left'))
+    squares.forEach(square => square.classList.remove('car-right', 'car-left', 'moving-right', 'moving-left'))
     carsRightOne.forEach(car => squares[car].classList.add('car-right'))
     carsRightTwo.forEach(car => squares[car].classList.add('car-right'))
     carsLeftOne.forEach(car => squares[car].classList.add('car-left'))
     carsLeftTwo.forEach(car => squares[car].classList.add('car-left'))
+
+    carsRightOne.forEach(car => squares[car].classList.add('moving-right'))
+    carsRightTwo.forEach(car => squares[car].classList.add('moving-right'))
+    carsLeftOne.forEach(car => squares[car].classList.add('moving-left'))
+    carsLeftTwo.forEach(car => squares[car].classList.add('moving-left'))
+    displayRoad()
     playerLost()
   }
 
-  function createCar(direction) {
-    if (direction === 'rightOne') {
-      const newCar = 81
-      carsRightOne.unshift(newCar)
-    } else if (direction === 'rightTwo') {
-      const newCar = 63
-      carsRightTwo.unshift(newCar)
-    } else if (direction === 'leftOne') {
-      const newCar = 80
-      carsLeftOne.push(newCar)
-    } else if (direction === 'leftTwo') {
-      const newCar = 62
-      carsLeftTwo.push(newCar)
-    }
-    displayCars()
-  }
-
-  // function loopAddCars() {
-  //   if (counterCarsAdded < 3) {
-  //     counterCarsAdded++
-  //     addingCarsTimeOut = setTimeout(() => {
-  //       createArrayCars()
-  //       loopAddCars()
-  //     }, 1500)
-  //   }
-  // }
-
-  // function createArrayCars() {
-  //   if (carsRightOne.length < 2) {
+  // function createCar(direction) {
+  //   if (direction === 'rightOne') {
+  //     const newCar = 81
+  //     carsRightOne.unshift(newCar)
+  //   } else if (direction === 'rightTwo') {
+  //     const newCar = 63
+  //     carsRightTwo.unshift(newCar)
+  //   } else if (direction === 'leftOne') {
   //     const newCar = 80
-  //     carsRightOne.push(newCar)
+  //     carsLeftOne.push(newCar)
+  //   } else if (direction === 'leftTwo') {
+  //     const newCar = 62
+  //     carsLeftTwo.push(newCar)
   //   }
-
-  //   if (carsLeftOne.length >= carAmount && carAmount <= 3) {
-  //     if (carAmount % 2 === 0) {
-  //       const newCar = 81
-  //       carsLeftOne.push(newCar)
-  //     }
-  //     carAmount++
-  //   }
+  //   displayCars()
   // }
-
 
   // *********** WATER/LOGS
 
@@ -418,30 +414,28 @@ function init() {
   }
 
   // *********** MOVE PLAYER
-  let movement = ''
-
   function handleKeyDown(e) {
     // ! Remove later
     console.log(playerIndex)
     switch (e.keyCode) {
       case 39:
         if (playerIndex % width < width - 1) playerIndex++
-        movement = 'right'
+        // movement = 'right'
         break
       case 37:
         if (playerIndex % width > 0) playerIndex--
-        movement = 'left'
+        // movement = 'left'
         break
       case 38:
         if (playerIndex - width >= 0) {
           playerIndex -= width
           addPoints(10)
         }
-        movement = 'up'
+        // movement = 'up'
         break
       case 40:
         if (playerIndex + width < width * height) playerIndex += width
-        movement = 'down'
+        // movement = 'down'
         break
     }
     // smoothMovement(playerIndex)
@@ -450,6 +444,8 @@ function init() {
     // setTimeout(addPlayer, 200)
     addPlayer()
   }
+
+  // let movement = ''
 
   // function smoothMovement(index) {
   //   switch (movement) {
@@ -467,7 +463,6 @@ function init() {
   //       break
   //   }
   // }
-
 
   function addPlayer() {
     squares.forEach(square => square.classList.remove('player'))
@@ -549,7 +544,7 @@ function init() {
 
   function playerDead() {
     playerDied = true
-    clearInterval(moveCarInterval)
+    // clearInterval(moveCarInterval)
     clearInterval(moveLogFastInterval)
     clearInterval(moveLogInterval)
     squares[playerIndex].classList.remove('player')
@@ -560,9 +555,11 @@ function init() {
 
   function resetPlayer() {
     if (playerDied) {
-      // moveCarInterval = setInterval(moveCars, 900)
-      moveLogInterval = setInterval(moveLogs, 1000)
-      moveLogFastInterval = setInterval(moveLogsFast, 600)
+      // moveCarInterval = setInterval(moveCars, 700)
+
+      // ! Uncomment later
+      // moveLogInterval = setInterval(moveLogs, 1000)
+      // moveLogFastInterval = setInterval(moveLogsFast, 600)
       playerDied = false
     }
     squares.forEach(square => square.classList.remove('player-dead'))

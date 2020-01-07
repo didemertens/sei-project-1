@@ -26,6 +26,7 @@ html, body {
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
 h4 {
@@ -88,39 +89,91 @@ h4 {
   height: 50px;
   width: 50px;
   /* ! Delete later */
-  border: 1px solid black;
+  /* border: 1px solid black; */
 }
 
 /* Board vars, change later */
 .grid-item.player {
+  position: relative;
   background-image: url('../assets/pika-sprite.png');
   background-repeat: no-repeat;
   background-size: contain;
+  z-index: 100;
 }
 
 .grid-item.player-won {
+  position: relative;
   background-image: url('../assets/pika-sprite.png');
   background-repeat: no-repeat;
   background-size: contain;
+  z-index: 100;
 }
 
 .grid-item.player-dead {
+  position: relative;
   background-image: url('../assets/pika-sprite.png');
   background-repeat: no-repeat;
   background-size: contain;
   animation: player-dies 1s ease-out;
+  z-index: 100;
 }
 
 .grid-item.car-right {
-  background-color: green;
+  background-image: url('../assets/car-right.png');
+  background-size: 40px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: black;
+  position: relative;
+  /* z-index: -20; */
+}
+
+.grid-item.car-right::before {
+  content: "";
+  display: block;
+  position: absolute;
+  height: 100%;
+  width: 50px;
+  transform: translateX(-50px);
+  background-color: black;
+  /* z-index: -20; */
 }
 
 .grid-item.car-left {
-  background-color: red;
+  background-image: url('../assets/car-left.png');
+  background-size: 40px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: black;
+  position: relative;
+  /* z-index: -20; */
+}
+
+.grid-item.car-left::before {
+  content: "";
+  display: block;
+  position: absolute;
+  height: 50px;
+  width: 50px;
+  transform: translateX(50px);
+  background-color: black;
+  z-index: -20;
+}
+
+.grid-item.road {
+  background-color: black;
+  z-index: -50;
 }
 
 .grid-item.homes {
-  background-color: pink;
+  background-image: url(../assets/houses.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.grid-item.homes.player {
+  background-image: url(../assets/pika-sprite.png), url(../assets/houses.png);
+  background-size: contain;
 }
 
 .grid-item.water {
@@ -128,26 +181,56 @@ h4 {
 }
 
 .grid-item.log {
-  background-color: burlywood;
+  background-image: url(../assets/log.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-color: blue;
 }
 
+.grid-item.log.player{
+  background-image: url(../assets/pika-sprite.png), url(../assets/log.png);
+  background-size: contain;
+}
 
 .grid-item.leaf {
-  background-color: forestgreen;
+  background-image: url(../assets/lilypad.png);
+  background-size: cover;
+  background-color: blue;
+}
+
+.grid-item.leaf.player{
+  background-image: url(../assets/pika-sprite.png), url(../assets/lilypad.png);
+  background-size: contain;
 }
 
 .grid-item.safe-place{
-  background-color: lightgreen;
+  position: relative;
+  z-index: 1;
+  background-image: url(../assets/grass.png);
+  background-size: contain;
 }
+
+.grid-item.safe-place.player{
+  background-image: url(../assets/pika-sprite.png), url(../assets/grass.png);
+  background-size: contain;
+}
+
+/* .grid-item.safe-place.player::after{
+  position: absolute;
+  z-index: -1;
+  background-image: url(../assets/pika-sprite.png), url(../assets/grass.png);
+  background-size: contain;
+} */
+
 /* ///////////////////////////////////////// */
 
 .moving-right {
-  animation: right 1s linear;
+  animation: right .9s linear;
   /* transform: translateX(25px); */
 } 
 
 .moving-left {
-  animation: left 1s linear;
+  animation: left .9s linear;
   /* transform: translateX(-25px); */
 } 
 
@@ -165,17 +248,14 @@ h4 {
   0% {
     transform: translateX(0px)
   }
-  15% {
+  25% {
     transform: translateX(15px)
   }
   50% {
-    transform: translateX(25px)
-  }
-  90% {
-    transform: translateX(40px)
+    transform: translateX(30px)
   }
   100% {
-    transform: translateX(50px)
+    transform: translateX(60px)
   }
 }
 
@@ -183,17 +263,14 @@ h4 {
   0% {
     transform: translateX(0px)
   }
-  15% {
+  25% {
     transform: translateX(-15px)
   }
   50% {
-    transform: translateX(-25px)
-  }
-  90% {
-    transform: translateX(-40px)
+    transform: translateX(-30px)
   }
   100% {
-    transform: translateX(-50px)
+    transform: translateX(-60px)
   }
 }
 
@@ -233,10 +310,8 @@ h4 {
   }
 }
 
-
 @keyframes player-dies {
   100% {
     background-image: url('../assets/cross.png');
-    transform: scale(1.1)
   }
 }
