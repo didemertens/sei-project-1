@@ -94,28 +94,24 @@ h4 {
 
 /* Board vars, change later */
 .grid-item.player {
-  position: relative;
   background-image: url('../assets/pika-sprite.png');
   background-repeat: no-repeat;
   background-size: contain;
+  position: relative;
   z-index: 100;
 }
 
 .grid-item.player-won {
-  position: relative;
   background-image: url('../assets/pika-sprite.png');
   background-repeat: no-repeat;
   background-size: contain;
-  z-index: 100;
 }
 
 .grid-item.player-dead {
-  position: relative;
   background-image: url('../assets/pika-sprite.png');
   background-repeat: no-repeat;
   background-size: contain;
   animation: player-dies 1s ease-out;
-  z-index: 100;
 }
 
 .grid-item.car-right {
@@ -125,18 +121,20 @@ h4 {
   background-repeat: no-repeat;
   background-color: black;
   position: relative;
-  /* z-index: -20; */
+  /* z-index: -10; */
 }
 
 .grid-item.car-right::before {
   content: "";
   display: block;
-  position: absolute;
   height: 100%;
   width: 50px;
+  -webkit-transform: translateX(-50px);
+  -ms-transform: translateX(-50px);
   transform: translateX(-50px);
   background-color: black;
-  /* z-index: -20; */
+  position: absolute;
+  z-index: -500;
 }
 
 .grid-item.car-left {
@@ -146,23 +144,26 @@ h4 {
   background-repeat: no-repeat;
   background-color: black;
   position: relative;
-  /* z-index: -20; */
+  /* z-index: -10; */
 }
 
 .grid-item.car-left::before {
   content: "";
   display: block;
-  position: absolute;
   height: 50px;
   width: 50px;
+  -webkit-transform: translateX(50px);
+  -ms-transform: translateX(50px);
   transform: translateX(50px);
   background-color: black;
-  z-index: -20;
+  position: absolute;
+  z-index: -500;
 }
 
 .grid-item.road {
   background-color: black;
-  z-index: -50;
+  /* position: relative; 
+  z-index: -50;  */
 }
 
 .grid-item.homes {
@@ -187,6 +188,19 @@ h4 {
   background-color: blue;
 }
 
+/* .grid-item.log::before {
+  content: "";
+  display: block;
+  height: 100%;
+  width: 50px;
+  -webkit-transform: translateX(-50px);
+  -ms-transform: translateX(-50px);
+  transform: translateX(-50px);
+  background-color: blue;
+  position: absolute;
+  z-index: -500;
+} */
+
 .grid-item.log.player{
   background-image: url(../assets/pika-sprite.png), url(../assets/log.png);
   background-size: contain;
@@ -197,6 +211,19 @@ h4 {
   background-size: cover;
   background-color: blue;
 }
+
+/* .grid-item.leaf::before {
+  content: "";
+  display: block;
+  height: 50px;
+  width: 50px;
+  -webkit-transform: translateX(50px);
+  -ms-transform: translateX(50px);
+  transform: translateX(50px);
+  background-color: blue;
+  position: absolute;
+  z-index: -500;
+} */
 
 .grid-item.leaf.player{
   background-image: url(../assets/pika-sprite.png), url(../assets/lilypad.png);
@@ -215,98 +242,76 @@ h4 {
   background-size: contain;
 }
 
-/* .grid-item.safe-place.player::after{
-  position: absolute;
-  z-index: -1;
-  background-image: url(../assets/pika-sprite.png), url(../assets/grass.png);
-  background-size: contain;
-} */
-
 /* ///////////////////////////////////////// */
 
 .moving-right {
   animation: right .9s linear;
-  /* transform: translateX(25px); */
 } 
+
 
 .moving-left {
   animation: left .9s linear;
-  /* transform: translateX(-25px); */
 } 
 
-.moving-up {
+      /* .moving-right-log {
+        animation: right .9s linear;
+      }  */
+
+/* .moving-left-log {
+  animation: left .9s linear;
+}  */
+
+/* .moving-up {
   animation: up 1s linear;
-  /* transform: translateY(-25px); */
 } 
 
 .moving-down {
   animation: down 1s linear;
-  /* transform: translateY(25px); */
-} 
+}  */
 
 @keyframes right {
   0% {
-    transform: translateX(0px)
+    -webkit-transform: translateX(0px);
+    -ms-transform: translateX(0px);
+    transform: translateX(0px);
   }
   25% {
-    transform: translateX(15px)
+    -webkit-transform: translateX(15px);
+    -ms-transform: translateX(15px);
+    transform: translateX(15px);
   }
   50% {
-    transform: translateX(30px)
+    -webkit-transform: translateX(30px);
+    -ms-transform: translateX(30px);
+    transform: translateX(30px);
   }
   100% {
-    transform: translateX(60px)
+    -webkit-transform: translateX(60px);
+    -ms-transform: translateX(60px);
+    transform: translateX(60px);
   }
 }
 
 @keyframes left {
   0% {
-    transform: translateX(0px)
+    -webkit-transform: translateX(0px);
+    -ms-transform: translateX(0px);
+    transform: translateX(0px);
   }
   25% {
-    transform: translateX(-15px)
+    -webkit-transform: translateX(-15px);
+    -ms-transform: translateX(-15px);
+    transform: translateX(-15px);
   }
   50% {
-    transform: translateX(-30px)
+    -webkit-transform: translateX(-30px);
+    -ms-transform: translateX(-30px);
+    transform: translateX(-30px);
   }
   100% {
-    transform: translateX(-60px)
-  }
-}
-
-@keyframes up {
-  0% {
-    transform: translateY(0px)
-  }
-  15% {
-    transform: translateY(-15px)
-  }
-  50% {
-    transform: translateY(-25px)
-  }
-  90% {
-    transform: translateY(-40px)
-  }
-  100% {
-    transform: translateY(-50px)
-  }
-}
-
-@keyframes down {
-  0% {
-    transform: translateY(0px)
-  }
-  15% {
-    transform: translateY(15px)
-  }
-  50% {
-    transform: translateY(25px)
-  }
-  90% {
-    transform: translateY(40px)
-  }
-  100% {
-    transform: translateY(50px)
+    -webkit-transform: translateX(-60px);
+    -ms-transform: translateX(-60px);
+    transform: translateX(-60px);
   }
 }
 
