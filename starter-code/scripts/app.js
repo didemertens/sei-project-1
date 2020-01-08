@@ -95,7 +95,7 @@ function init() {
   let gameLost = false
   let playerDied = false
   let waterTimeout = null
-  let carHitTimeout = null
+  const carHitTimeout = null
   let inWater = false
   let carHit = false
   // Highscore
@@ -185,7 +185,7 @@ function init() {
     // moveLeafFastInterval = setInterval(moveLeafFast, 800)
     // ! Uncomment later
     moveCars()
-    // moveCarInterval = setInterval(moveCars, 500)
+    moveCarInterval = setInterval(moveCars, 700)
     createHomes()
     createSafePlaces()
   }
@@ -307,18 +307,28 @@ function init() {
     switch (e.keyCode) {
       case 39:
         if (playerIndex % width < width - 1) playerIndex++
+        console.log(squares[playerIndex])
+        console.log(squares[playerIndex].style.background)
+
+        // squares[playerIndex].style.backgroundImage = 'url(assets/car-left.png)'
+
+
+        // squares[playerIndex].style.transform = 'rotate(90deg)'
         break
       case 37:
         if (playerIndex % width > 0) playerIndex--
+        // squares[playerIndex].style.transform = 'rotate(-90deg)'
         break
       case 38:
         if (playerIndex - width >= 0) {
           playerIndex -= width
           addPoints(10)
         }
+        // squares[playerIndex].style.transform = 'rotate(0deg)'
         break
       case 40:
         if (playerIndex + width < width * height) playerIndex += width
+        // squares[playerIndex].style.transform = 'rotate(180deg)'
         break
     }
     addPlayer()
@@ -371,10 +381,19 @@ function init() {
   }
 
   function playerCar() {
-    if (carsRight.includes(playerIndex) || carsLeft.includes(playerIndex)) {
-      carHit = true
-      carHitTimeout = setTimeout(playerLost, 150)
-    }
+    carsRight.forEach(car => {
+      if (car + 1 === playerIndex) {
+        carHit = true
+        playerLost()
+      }
+    })
+
+    carsLeft.forEach(car => {
+      if (car - 1 === playerIndex) {
+        carHit = true
+        playerLost()
+      }
+    })
   }
 
   function playerLost() {
@@ -383,12 +402,7 @@ function init() {
       clearTimeout(waterTimeout)
     }
 
-    if (carHit) {
-      carHit = false
-      clearTimeout(carHitTimeout)
-    }
-
-    if (carsRight.includes(playerIndex) || carsLeft.includes(playerIndex) || waterSquares.includes(playerIndex)) {
+    if (carHit || waterSquares.includes(playerIndex)) {
       if (playerLives > 1) {
         playerScore -= 10
         playerLives -= 1
@@ -430,12 +444,13 @@ function init() {
     squares.forEach(square => square.classList.remove('moving-right', 'moving-left', 'moving-left-log', 'moving-right-log'))
     playerIndex = width * height - 5
     setTimeout(resetPlayer, 1000)
+    carHit = false
   }
 
   function resetPlayer() {
     if (playerDied) {
       moveCars()
-      moveCarInterval = setInterval(moveCars, 500)
+      moveCarInterval = setInterval(moveCars, 700)
       moveLogs()
       moveLogInterval = setInterval(moveLogs, 900)
       moveLeafFast()

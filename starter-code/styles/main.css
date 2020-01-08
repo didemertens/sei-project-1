@@ -97,7 +97,7 @@ h4 {
   background-size: contain;
   position: relative;
   z-index: 10;
-  background-color: transparent;
+  /* background-color: transparent; */
 }
 
 .grid-item.player-won {
@@ -247,12 +247,12 @@ h4 {
 /* ///////////////////////////////////////// */
 
 .moving-right {
-  animation: right .5s linear;
+  animation: right .7s linear;
 } 
 
 
 .moving-left {
-  animation: left .5s linear;
+  animation: left .7s linear;
 } 
 
 .moving-right-log {
