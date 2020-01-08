@@ -256,8 +256,7 @@ h4 {
 } 
 
 .moving-right-log {
-  animation: right 1s linear;
-  /* transform: translateX(-25px); */
+  animation: right .9s linear;
 } 
 
 .moving-left-log {

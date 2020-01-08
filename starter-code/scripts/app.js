@@ -67,22 +67,18 @@ function init() {
   let squares = []
   let homes = [8, 6, 4, 2, 0]
   // cars
-  // let carsRightOne = [81, 84]
-  // let carsRightTwo = [63, 69]
-  const carsLeftOne = [73, 79]
-  const carsLeftTwo = [54, 57, 61]
+  let carsRight = [81, 84, 63, 69]
+  let carsLeft = [73, 79, 54, 57, 61]
   let roadSquares = []
   // water
   let waterSquares = []
-  let logsRightOne = [8, 11, 15, 17]
-  let logsRightTwo = [26, 29, 31, 33]
-  let leafLeftOne = [38, 40, 42, 44]
-  let leafLeftTwo = [18, 20, 22, 24]
+  let logsRight = [10, 13, 16, 27, 29, 31, 33]
+  let leafLeft = [38, 40, 42, 44, 18, 20, 22, 24]
   // intervals and timeouts
   let moveCarInterval = null
-  let addingCarsTimeOut = null
+  const addingCarsTimeOut = null
   let moveLogInterval = null
-  let moveLogFastInterval = null
+  let moveLeafFastInterval = null
   let counterTimeOut = null
   let timeOutRemoveCounter = null
   let timeOutGame = null
@@ -184,12 +180,12 @@ function init() {
     })
     // ! Uncomment later
     moveLogs()
-    moveLogsFast()
-    moveLogInterval = setInterval(moveLogs, 900)
-    moveLogFastInterval = setInterval(moveLogsFast, 800)
+    moveLeafFast()
+    // moveLogInterval = setInterval(moveLogs, 900)
+    // moveLeafFastInterval = setInterval(moveLeafFast, 800)
     // ! Uncomment later
     moveCars()
-    moveCarInterval = setInterval(moveCars, 500)
+    // moveCarInterval = setInterval(moveCars, 500)
     createHomes()
     createSafePlaces()
   }
@@ -209,12 +205,8 @@ function init() {
   }
 
   // *********** CARS
-  // ! MOVE LATER
-  let carsRight = [81, 84, 63, 69]
-  let carsLeft = [73, 79, 54, 57, 61]
 
   function moveCars() {
-
     carsRight = carsRight.map(car => {
       if (car % width < width - 1) {
         return car + 1
@@ -230,64 +222,13 @@ function init() {
         return car + (width - 1)
       }
     })
-
-    // carsRightOne = carsRightOne.reduce((newCars, car) => {
-    //   if (car < 89) {
-    //     car += 1
-    //     newCars.push(car)
-    //   } else if (car === 89) {
-    //     const newCar = 81
-    //     newCars.unshift(newCar)
-    //   }
-    //   return newCars
-    // }, [])
-
-    // carsRightTwo = carsRightTwo.reduce((newCars, car) => {
-    //   if (car < 71) {
-    //     car += 1
-    //     newCars.push(car)
-    //   } else if (car === 71) {
-    //     const newCar = 63
-    //     newCars.unshift(newCar)
-    //   }
-    //   return newCars
-    // }, [])
-
-    // carsLeftOne = carsLeftOne.reduce((newCars, car) => {
-    //   if (car > 72) {
-    //     car -= 1
-    //     newCars.push(car)
-    //   } else if (car === 72) {
-    //     const newCar = 80
-    //     newCars.push(newCar)
-    //   }
-    //   return newCars
-    // }, [])
-
-    // carsLeftTwo = carsLeftTwo.reduce((newCars, car) => {
-    //   if (car > 54) {
-    //     car -= 1
-    //     newCars.push(car)
-    //   } else if (car === 54) {
-    //     const newCar = 62
-    //     newCars.push(newCar)
-    //   }
-    //   return newCars
-    // }, [])
-
     displayCars()
   }
 
   function displayCars() {
     squares.forEach(square => square.classList.remove('car-right', 'car-left', 'moving-right', 'moving-left'))
-    // carsRightOne.forEach(car => squares[car].classList.add('car-right', 'moving-right'))
-    // carsRightTwo.forEach(car => squares[car].classList.add('car-right', 'moving-right'))
-
     carsRight.forEach(car => squares[car].classList.add('car-right', 'moving-right'))
-
     carsLeft.forEach(car => squares[car].classList.add('car-left', 'moving-left'))
-    // carsLeftOne.forEach(car => squares[car].classList.add('car-left', 'moving-left'))
-    // carsLeftTwo.forEach(car => squares[car].classList.add('car-left', 'moving-left'))
     displayRoad()
     playerCar()
   }
@@ -303,70 +244,38 @@ function init() {
   // *********** WATER/LOGS
 
   function moveLogs() {
-    logsRightOne = logsRightOne.reduce((newLogs, log) => {
-      if (log < 17) {
-        log += 1
-        newLogs.push(log)
-      } else if (log === 17) {
-        log = 9
-        newLogs.unshift(log)
+    logsRight = logsRight.map(log => {
+      if (log % width < width - 1) {
+        return log + 1
+      } else {
+        return log - (width - 1)
       }
-      return newLogs
-    }, [])
-
-    logsRightTwo = logsRightTwo.reduce((newLogs, log) => {
-      if (log < 35) {
-        log += 1
-        newLogs.push(log)
-      } else if (log === 35) {
-        log = 27
-        newLogs.unshift(log)
-      }
-      return newLogs
-    }, [])
-
+    })
     displayLogs()
     movePlayerOnLog()
   }
 
-  function moveLogsFast() {
-    leafLeftOne = leafLeftOne.reduce((newLogs, log) => {
-      if (log > 36) {
-        log -= 1
-        newLogs.push(log)
-      } else if (log === 36) {
-        log = 44
-        newLogs.push(log)
+  function moveLeafFast() {
+    leafLeft = leafLeft.map(leaf => {
+      if (leaf % width > 0) {
+        return leaf - 1
+      } else {
+        return leaf + (width - 1)
       }
-      return newLogs
-    }, [])
-
-    leafLeftTwo = leafLeftTwo.reduce((newLogs, log) => {
-      if (log > 18) {
-        log -= 1
-        newLogs.push(log)
-      } else if (log === 18) {
-        log = 26
-        newLogs.push(log)
-      }
-      return newLogs
-    }, [])
-
+    })
     displayLogs()
     movePlayerOnLogFast()
   }
 
   function displayLogs() {
     squares.forEach(square => square.classList.remove('log', 'leaf', 'log-last', 'moving-left-log', 'moving-right-log'))
-    logsRightOne.forEach(log => squares[log].classList.add('log', 'moving-right-log'))
-    logsRightTwo.forEach(log => squares[log].classList.add('log', 'moving-right-log'))
-    leafLeftOne.forEach(log => squares[log].classList.add('leaf', 'moving-left-log'))
-    leafLeftTwo.forEach(log => squares[log].classList.add('leaf', 'moving-left-log'))
+    logsRight.forEach(log => squares[log].classList.add('log', 'moving-right-log'))
+    leafLeft.forEach(log => squares[log].classList.add('leaf', 'moving-left-log'))
     displayWater()
   }
 
   function movePlayerOnLog() {
-    if (logsRightOne.includes(playerIndex + 1) || logsRightTwo.includes(playerIndex + 1)) {
+    if (logsRight.includes(playerIndex + 1)) {
       if (playerIndex % width < width - 1) {
         playerIndex++
         addPlayer()
@@ -376,7 +285,7 @@ function init() {
   }
 
   function movePlayerOnLogFast() {
-    if (leafLeftOne.includes(playerIndex - 1) || leafLeftTwo.includes(playerIndex - 1)) {
+    if (leafLeft.includes(playerIndex - 1)) {
       if (playerIndex % width > 0) {
         playerIndex--
         addPlayer()
@@ -388,17 +297,13 @@ function init() {
   function displayWater() {
     squares.forEach(square => square.classList.remove('water'))
     waterSquares = Array.from({ length: 4 * width }, (x, i) => i + width)
-    waterSquares = waterSquares.filter(water => !logsRightOne.includes(water) && !leafLeftTwo.includes(water)
-      && !leafLeftOne.includes(water) && !logsRightTwo.includes(water))
+    waterSquares = waterSquares.filter(water => !logsRight.includes(water) && !leafLeft.includes(water))
     waterSquares.forEach(water => squares[water].classList.add('water'))
   }
 
 
   // *********** MOVE PLAYER
   function handleKeyDown(e) {
-    // ! Remove later
-    // console.log(playerIndex)
-    /////////////////////////////
     switch (e.keyCode) {
       case 39:
         if (playerIndex % width < width - 1) playerIndex++
@@ -416,7 +321,6 @@ function init() {
         if (playerIndex + width < width * height) playerIndex += width
         break
     }
-
     addPlayer()
   }
 
@@ -518,8 +422,8 @@ function init() {
   function playerDead() {
     playerDied = true
     clearInterval(moveCarInterval)
-    clearInterval(moveLogFastInterval)
     clearInterval(moveLogInterval)
+    clearInterval(moveLeafFastInterval)
     squares[playerIndex].classList.remove('player')
     squares[playerIndex].classList.add('player-dead')
     // stop car/log animation
@@ -532,8 +436,10 @@ function init() {
     if (playerDied) {
       moveCars()
       moveCarInterval = setInterval(moveCars, 500)
+      moveLogs()
       moveLogInterval = setInterval(moveLogs, 900)
-      moveLogFastInterval = setInterval(moveLogsFast, 800)
+      moveLeafFast()
+      moveLeafFastInterval = setInterval(moveLeafFast, 800)
       playerDied = false
     }
     squares.forEach(square => square.classList.remove('player-dead'))
@@ -667,7 +573,7 @@ function init() {
     start.innerHTML = 'Play again'
     window.removeEventListener('keydown', handleKeyDown)
     clearInterval(moveCarInterval)
-    clearInterval(moveLogFastInterval)
+    clearInterval(moveLeafFastInterval)
     clearTimeout(addingCarsTimeOut)
     clearInterval(moveLogInterval)
   }
@@ -696,16 +602,10 @@ function init() {
     homes = [8, 6, 4, 2, 0]
     squares = []
     carsRight = [80, 84, 63, 69]
-    // carsRightOne = [80, 84]
-    // carsRightTwo = [63, 69]
     carsLeft = [81, 78, 76, 55, 57, 60]
-    // carsLeftOne = [81, 78, 76]
-    // carsLeftTwo = [55, 57, 60]
     waterSquares = []
-    logsRightOne = [8, 11, 15, 17]
-    logsRightTwo = [26, 29, 31, 33]
-    leafLeftOne = [38, 40, 42, 44]
-    leafLeftTwo = [18, 20, 22, 24]
+    logsRight = [10, 13, 16, 27, 29, 31, 33]
+    leafLeft = [38, 40, 42, 44, 18, 20, 22, 24]
     countDownGame = ''
     counterTime = 3
     // player
@@ -718,13 +618,14 @@ function init() {
     gameLost = false
     playerDied = false
     // intervals and timeouts
-    moveCarInterval = null
-    addingCarsTimeOut = null
-    moveLogInterval = null
-    moveLogFastInterval = null
-    counterTimeOut = null
-    timeOutRemoveCounter = null
-    timeOutGame = null
+    // moveCarInterval = null
+    // addingCarsTimeOut = null
+    // moveLogInterval = null
+    // moveLeafFastInterval = null
+    // counterTimeOut = null
+    // timeOutRemoveCounter = null
+    // timeOutGame = null
+
     // Reset display lives/score
     lifeDisplay.innerHTML = playerLives
     scoreDisplay.innerHTML = playerScore
