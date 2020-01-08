@@ -90,6 +90,7 @@ function init() {
   // ! Uncomment later
   // let playerIndex = width * height - 5
   let playerIndex = 48
+  // !
   let playerLives = 3
   let frogFamily = 5
   let frogsHome = 0
@@ -97,7 +98,10 @@ function init() {
   let gameWon = false
   let gameLost = false
   let playerDied = false
-
+  let waterTimeout = null
+  let carHitTimeout = null
+  let inWater = false
+  let carHit = false
   // Highscore
   let userNameDiv = ''
   let nameDisplay = ''
@@ -331,30 +335,12 @@ function init() {
 
   function displayLogs() {
     squares.forEach(square => square.classList.remove('log', 'leaf', 'log-last', 'moving-left-log', 'moving-right-log'))
-
     logsRightOne.forEach(log => squares[log].classList.add('log', 'moving-right-log'))
     logsRightTwo.forEach(log => squares[log].classList.add('log', 'moving-right-log'))
-
     leafLeftOne.forEach(log => squares[log].classList.add('leaf', 'moving-left-log'))
     leafLeftTwo.forEach(log => squares[log].classList.add('leaf', 'moving-left-log'))
-    // ! OLD
-
-    // console.log(playerIndex)
-    // logsRightTwo.forEach(log => squares[log].classList.add('log'))
-    // logsRightTwo.forEach(log => squares[log].animate([
-    //   { transform: 'translateX(0px)' },
-    //   { transform: 'translateX(25px)' }], {
-    //   duration: 1000
-    // }))
-
-    // logsRightTwo.sort((a, b) => a - b)
-    // const smallest = logsRightTwo[0]
-    // squares[smallest].classList.add('log-last')
     displayWater()
   }
-
-
-  // ! OLD
 
   function movePlayerOnLog() {
     if (logsRightOne.includes(playerIndex + 1) || logsRightTwo.includes(playerIndex + 1)) {
@@ -363,12 +349,6 @@ function init() {
         addPlayer()
       }
     }
-    // if (leafLeftOne.includes(playerIndex - 1) || leafLeftTwo.includes(playerIndex - 1)) {
-    //   if (playerIndex % width > 0) {
-    //     playerIndex--
-    //     addPlayer()
-    //   }
-    // }
     playerWater()
   }
 
@@ -456,17 +436,10 @@ function init() {
     }
   }
 
-  // ! MOVE LATER
-
-  let waterTimeout = null
-  let carHitTimeout = null
-  let inWater = false
-  let carHit = false
-
   function playerWater() {
     if (waterSquares.includes(playerIndex)) {
       inWater = true
-      waterTimeout = setTimeout(playerLost, 400)
+      waterTimeout = setTimeout(playerLost, 375)
     }
   }
 
@@ -538,7 +511,6 @@ function init() {
   function resetPlayer() {
     if (playerDied) {
       moveCars()
-      // ! Uncomment later
       moveCarInterval = setInterval(moveCars, 500)
       moveLogInterval = setInterval(moveLogs, 900)
       moveLogFastInterval = setInterval(moveLogsFast, 800)
@@ -749,7 +721,6 @@ function init() {
   playGame()
   // gameLost = true
   // showResult()
-
 }
 
 window.addEventListener('DOMContentLoaded', init)

@@ -88,17 +88,15 @@ h4 {
 .grid-item {
   height: 50px;
   width: 50px;
-  /* ! Delete later */
-  /* border: 1px solid black; */
 }
 
-/* Board vars, change later */
+/* Board vars */
 .grid-item.player {
   background-image: url('../assets/dog.png');
   background-repeat: no-repeat;
   background-size: contain;
   position: relative;
-  z-index: 100;
+  z-index: 10;
   background-color: transparent;
 }
 
@@ -170,7 +168,7 @@ h4 {
 }
 
 .grid-item.safe-place.player-won {
-  background-image: url(../assets/dog.png), url(../assets/houses.png), url(../assets/grass.png);
+  background-image: url(../assets/dog-happy.png), url(../assets/houses.png), url(../assets/grass.png);
   background-size: contain;
 }
 
@@ -184,6 +182,7 @@ h4 {
   background-repeat: no-repeat;
   background-color: blue;
   position: relative;
+  z-index: 20;
 }
 
 .grid-item.log::before {
@@ -211,6 +210,7 @@ h4 {
   background-size: cover;
   background-color: blue;
   position: relative;
+  z-index: 20;
 }
 
 .grid-item.leaf::before {
@@ -262,29 +262,6 @@ h4 {
 .moving-left-log {
   animation: left .8s linear;
 } 
-/* 
-@keyframes left-log {
-  0% {
-    -webkit-transform: translateX(0px);
-    -ms-transform: translateX(0px);
-    transform: translateX(0px);
-  }
-  25% {
-    -webkit-transform: translateX(-12.5px);
-    -ms-transform: translateX(-12.5px);
-    transform: translateX(-12.5px);
-  }
-  50% {
-    -webkit-transform: translateX(-25px);
-    -ms-transform: translateX(-25px);
-    transform: translateX(-25px);
-  }
-  100% {
-    -webkit-transform: translateX(-50px);
-    -ms-transform: translateX(-50px);
-    transform: translateX(-50px);
-  }
-} */
 
 @keyframes right {
   0% {
