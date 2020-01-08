@@ -111,6 +111,7 @@ h4 {
   background-repeat: no-repeat;
   background-size: contain;
   animation: player-dies 1s ease-out;
+  z-index: 100;
 }
 
 .grid-item.car-right {

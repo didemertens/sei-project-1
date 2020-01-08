@@ -67,10 +67,10 @@ function init() {
   let squares = []
   let homes = [8, 6, 4, 2, 0]
   // cars
-  let carsRightOne = [81, 84]
-  let carsRightTwo = [63, 69]
-  let carsLeftOne = [73, 79]
-  let carsLeftTwo = [54, 57, 61]
+  // let carsRightOne = [81, 84]
+  // let carsRightTwo = [63, 69]
+  const carsLeftOne = [73, 79]
+  const carsLeftTwo = [54, 57, 61]
   let roadSquares = []
   // water
   let waterSquares = []
@@ -209,61 +209,85 @@ function init() {
   }
 
   // *********** CARS
+  // ! MOVE LATER
+  let carsRight = [81, 84, 63, 69]
+  let carsLeft = [73, 79, 54, 57, 61]
 
   function moveCars() {
-    carsRightOne = carsRightOne.reduce((newCars, car) => {
-      if (car < 89) {
-        car += 1
-        newCars.push(car)
-      } else if (car === 89) {
-        const newCar = 81
-        newCars.unshift(newCar)
-      }
-      return newCars
-    }, [])
 
-    carsRightTwo = carsRightTwo.reduce((newCars, car) => {
-      if (car < 71) {
-        car += 1
-        newCars.push(car)
-      } else if (car === 71) {
-        const newCar = 63
-        newCars.unshift(newCar)
+    carsRight = carsRight.map(car => {
+      if (car % width < width - 1) {
+        return car + 1
+      } else {
+        return car - (width - 1)
       }
-      return newCars
-    }, [])
+    })
 
-    carsLeftOne = carsLeftOne.reduce((newCars, car) => {
-      if (car > 72) {
-        car -= 1
-        newCars.push(car)
-      } else if (car === 72) {
-        const newCar = 80
-        newCars.push(newCar)
+    carsLeft = carsLeft.map(car => {
+      if (car % width > 0) {
+        return car - 1
+      } else {
+        return car + (width - 1)
       }
-      return newCars
-    }, [])
+    })
 
-    carsLeftTwo = carsLeftTwo.reduce((newCars, car) => {
-      if (car > 54) {
-        car -= 1
-        newCars.push(car)
-      } else if (car === 54) {
-        const newCar = 62
-        newCars.push(newCar)
-      }
-      return newCars
-    }, [])
+    // carsRightOne = carsRightOne.reduce((newCars, car) => {
+    //   if (car < 89) {
+    //     car += 1
+    //     newCars.push(car)
+    //   } else if (car === 89) {
+    //     const newCar = 81
+    //     newCars.unshift(newCar)
+    //   }
+    //   return newCars
+    // }, [])
+
+    // carsRightTwo = carsRightTwo.reduce((newCars, car) => {
+    //   if (car < 71) {
+    //     car += 1
+    //     newCars.push(car)
+    //   } else if (car === 71) {
+    //     const newCar = 63
+    //     newCars.unshift(newCar)
+    //   }
+    //   return newCars
+    // }, [])
+
+    // carsLeftOne = carsLeftOne.reduce((newCars, car) => {
+    //   if (car > 72) {
+    //     car -= 1
+    //     newCars.push(car)
+    //   } else if (car === 72) {
+    //     const newCar = 80
+    //     newCars.push(newCar)
+    //   }
+    //   return newCars
+    // }, [])
+
+    // carsLeftTwo = carsLeftTwo.reduce((newCars, car) => {
+    //   if (car > 54) {
+    //     car -= 1
+    //     newCars.push(car)
+    //   } else if (car === 54) {
+    //     const newCar = 62
+    //     newCars.push(newCar)
+    //   }
+    //   return newCars
+    // }, [])
 
     displayCars()
   }
 
   function displayCars() {
     squares.forEach(square => square.classList.remove('car-right', 'car-left', 'moving-right', 'moving-left'))
-    carsRightOne.forEach(car => squares[car].classList.add('car-right', 'moving-right'))
-    carsRightTwo.forEach(car => squares[car].classList.add('car-right', 'moving-right'))
-    carsLeftOne.forEach(car => squares[car].classList.add('car-left', 'moving-left'))
-    carsLeftTwo.forEach(car => squares[car].classList.add('car-left', 'moving-left'))
+    // carsRightOne.forEach(car => squares[car].classList.add('car-right', 'moving-right'))
+    // carsRightTwo.forEach(car => squares[car].classList.add('car-right', 'moving-right'))
+
+    carsRight.forEach(car => squares[car].classList.add('car-right', 'moving-right'))
+
+    carsLeft.forEach(car => squares[car].classList.add('car-left', 'moving-left'))
+    // carsLeftOne.forEach(car => squares[car].classList.add('car-left', 'moving-left'))
+    // carsLeftTwo.forEach(car => squares[car].classList.add('car-left', 'moving-left'))
     displayRoad()
     playerCar()
   }
@@ -271,8 +295,7 @@ function init() {
   function displayRoad() {
     squares.forEach(square => square.classList.remove('road'))
     roadSquares = Array.from({ length: 5 * width }, (x, i) => i + (width * 5))
-    roadSquares = roadSquares.filter(road => !carsRightOne.includes(road) && !carsRightTwo.includes(road)
-      && !carsLeftOne.includes(road) && !carsLeftTwo.includes(road))
+    roadSquares = roadSquares.filter(road => !carsRight.includes(road) && !carsLeft.includes(road))
     roadSquares.forEach(road => squares[road].classList.add('road'))
   }
 
@@ -444,8 +467,7 @@ function init() {
   }
 
   function playerCar() {
-    if (carsRightOne.includes(playerIndex) || carsLeftOne.includes(playerIndex)
-      || carsRightTwo.includes(playerIndex) || carsLeftTwo.includes(playerIndex)) {
+    if (carsRight.includes(playerIndex) || carsLeft.includes(playerIndex)) {
       carHit = true
       carHitTimeout = setTimeout(playerLost, 150)
     }
@@ -462,9 +484,7 @@ function init() {
       clearTimeout(carHitTimeout)
     }
 
-    if (carsRightOne.includes(playerIndex) || carsLeftOne.includes(playerIndex)
-      || carsRightTwo.includes(playerIndex) || carsLeftTwo.includes(playerIndex)
-      || waterSquares.includes(playerIndex)) {
+    if (carsRight.includes(playerIndex) || carsLeft.includes(playerIndex) || waterSquares.includes(playerIndex)) {
       if (playerLives > 1) {
         playerScore -= 10
         playerLives -= 1
@@ -675,10 +695,12 @@ function init() {
     // board
     homes = [8, 6, 4, 2, 0]
     squares = []
-    carsRightOne = [80, 84]
-    carsRightTwo = [63, 69]
-    carsLeftOne = [81, 78, 76]
-    carsLeftTwo = [55, 57, 60]
+    carsRight = [80, 84, 63, 69]
+    // carsRightOne = [80, 84]
+    // carsRightTwo = [63, 69]
+    carsLeft = [81, 78, 76, 55, 57, 60]
+    // carsLeftOne = [81, 78, 76]
+    // carsLeftTwo = [55, 57, 60]
     waterSquares = []
     logsRightOne = [8, 11, 15, 17]
     logsRightTwo = [26, 29, 31, 33]
