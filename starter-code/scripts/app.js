@@ -76,7 +76,7 @@ function init() {
   let leafLeft = [38, 40, 42, 44, 18, 20, 22, 24]
   // intervals and timeouts
   let moveCarInterval = null
-  const addingCarsTimeOut = null
+  // let addingCarsTimeOut = null
   let moveLogInterval = null
   let moveLeafFastInterval = null
   let counterTimeOut = null
@@ -95,7 +95,7 @@ function init() {
   let gameLost = false
   let playerDied = false
   let waterTimeout = null
-  const carHitTimeout = null
+  // const carHitTimeout = null
   let inWater = false
   let carHit = false
   // Highscore
@@ -181,13 +181,14 @@ function init() {
     // ! Uncomment later
     moveLogs()
     moveLeafFast()
-    // moveLogInterval = setInterval(moveLogs, 900)
-    // moveLeafFastInterval = setInterval(moveLeafFast, 800)
+    moveLogInterval = setInterval(moveLogs, 900)
+    moveLeafFastInterval = setInterval(moveLeafFast, 800)
     // ! Uncomment later
     moveCars()
-    moveCarInterval = setInterval(moveCars, 700)
+    moveCarInterval = setInterval(moveCars, 600)
     createHomes()
     createSafePlaces()
+    setBackgroundImg()
   }
 
   function movePlayer() {
@@ -235,7 +236,7 @@ function init() {
 
   function displayRoad() {
     squares.forEach(square => square.classList.remove('road'))
-    roadSquares = Array.from({ length: 5 * width }, (x, i) => i + (width * 5))
+    roadSquares = Array.from({ length: 4 * width }, (x, i) => i + (width * 6))
     roadSquares = roadSquares.filter(road => !carsRight.includes(road) && !carsLeft.includes(road))
     roadSquares.forEach(road => squares[road].classList.add('road'))
   }
@@ -268,6 +269,8 @@ function init() {
   }
 
   function displayLogs() {
+    squares[playerIndex].style.backgroundImage = ''
+    setBackgroundImg()
     squares.forEach(square => square.classList.remove('log', 'leaf', 'log-last', 'moving-left-log', 'moving-right-log'))
     logsRight.forEach(log => squares[log].classList.add('log', 'moving-right-log'))
     leafLeft.forEach(log => squares[log].classList.add('leaf', 'moving-left-log'))
@@ -290,6 +293,7 @@ function init() {
         playerIndex--
         addPlayer()
       }
+
     }
     playerWater()
   }
@@ -301,34 +305,42 @@ function init() {
     waterSquares.forEach(water => squares[water].classList.add('water'))
   }
 
+  // ! MOVE LATER
+  let backImg = ''
+
+  function setBackgroundImg() {
+    const img = squares[playerIndex]
+    const squareImg = img.currentStyle || window.getComputedStyle(img, false).backgroundImage.slice(4, -1).replace(/"/g, '')
+    const squareSlash = squareImg.slice('').lastIndexOf('/')
+    backImg = squareImg.slice(squareSlash + 1)
+  }
 
   // *********** MOVE PLAYER
   function handleKeyDown(e) {
+    squares[playerIndex].style.backgroundImage = ''
     switch (e.keyCode) {
       case 39:
         if (playerIndex % width < width - 1) playerIndex++
-        console.log(squares[playerIndex])
-        console.log(squares[playerIndex].style.background)
-
-        // squares[playerIndex].style.backgroundImage = 'url(assets/car-left.png)'
-
-
-        // squares[playerIndex].style.transform = 'rotate(90deg)'
+        setBackgroundImg()
+        squares[playerIndex].style.backgroundImage = `url(assets/dog-right.png), url(assets/${backImg})`
         break
       case 37:
         if (playerIndex % width > 0) playerIndex--
-        // squares[playerIndex].style.transform = 'rotate(-90deg)'
+        setBackgroundImg()
+        squares[playerIndex].style.backgroundImage = `url(assets/dog-left.png), url(assets/${backImg})`
         break
       case 38:
         if (playerIndex - width >= 0) {
           playerIndex -= width
           addPoints(10)
         }
-        // squares[playerIndex].style.transform = 'rotate(0deg)'
+        setBackgroundImg()
+        squares[playerIndex].style.backgroundImage = `url(assets/dog.png), url(assets/${backImg})`
         break
       case 40:
         if (playerIndex + width < width * height) playerIndex += width
-        // squares[playerIndex].style.transform = 'rotate(180deg)'
+        setBackgroundImg()
+        squares[playerIndex].style.backgroundImage = `url(assets/dog-down.png), url(assets/${backImg})`
         break
     }
     addPlayer()
@@ -440,6 +452,7 @@ function init() {
     clearInterval(moveLeafFastInterval)
     squares[playerIndex].classList.remove('player')
     squares[playerIndex].classList.add('player-dead')
+    squares[playerIndex].style.backgroundImage = `url(assets/${backImg})`
     // stop car/log animation
     squares.forEach(square => square.classList.remove('moving-right', 'moving-left', 'moving-left-log', 'moving-right-log'))
     playerIndex = width * height - 5
@@ -450,16 +463,18 @@ function init() {
   function resetPlayer() {
     if (playerDied) {
       moveCars()
-      moveCarInterval = setInterval(moveCars, 700)
+      // moveCarInterval = setInterval(moveCars, 600)
       moveLogs()
-      moveLogInterval = setInterval(moveLogs, 900)
+      // moveLogInterval = setInterval(moveLogs, 900)
       moveLeafFast()
-      moveLeafFastInterval = setInterval(moveLeafFast, 800)
+      // moveLeafFastInterval = setInterval(moveLeafFast, 800)
       playerDied = false
     }
     squares.forEach(square => square.classList.remove('player-dead'))
     playerIndex = width * height - 5
+    setBackgroundImg()
     addPlayer()
+    squares[playerIndex].style.backgroundImage = 'url(assets/dog.png), url(assets/grass.png)'
   }
 
   // *********** SHOW/UPDATE SCORE
@@ -589,7 +604,7 @@ function init() {
     window.removeEventListener('keydown', handleKeyDown)
     clearInterval(moveCarInterval)
     clearInterval(moveLeafFastInterval)
-    clearTimeout(addingCarsTimeOut)
+    // clearTimeout(addingCarsTimeOut)
     clearInterval(moveLogInterval)
   }
 
