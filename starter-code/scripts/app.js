@@ -38,25 +38,12 @@
 // Create road
 // Show player, not car going over player
 
-////////
-
-// index of obstacles + 2 or - 2?
-
 // Make log/leaf smoother
+////////
 
 // Remove bugs (play again)
 
 //////
-
-// Add easy, medium, hard
-// > normal, dizzy, puppy
-// Attack of the cat(s)?  Following dogs?
-// Timer for getting the frogs home? 
-
-// 2 players?
-
-// Skip story button
-// Toggle options?
 
 function init() {
   // DOM VARIABLES
@@ -87,8 +74,8 @@ function init() {
   let roadSquares = []
   // water
   let waterSquares = []
-  let logsRightOne = [8, 9, 10, 11, 13, 14]
-  let logsRightTwo = [27, 28, 29, 30, 31, 32]
+  let logsRightOne = [8, 11, 15, 17]
+  let logsRightTwo = [26, 29, 31, 33]
   let leafLeftOne = [38, 40, 42, 44]
   let leafLeftTwo = [18, 20, 22, 24]
   // intervals and timeouts
@@ -193,6 +180,7 @@ function init() {
     })
     // ! Uncomment later
     moveLogs()
+    moveLogsFast()
     moveLogInterval = setInterval(moveLogs, 900)
     moveLogFastInterval = setInterval(moveLogsFast, 800)
     // ! Uncomment later
@@ -212,7 +200,7 @@ function init() {
   }
 
   function createSafePlaces() {
-    const safeSquaresOne = [Array.from({ length: width }, (x, i) => i + 45), Array.from({ length: width }, (x, i) => i + 90)]
+    const safeSquaresOne = [Array.from({ length: width }, (x, i) => i + 45), Array.from({ length: width }, (x, i) => i + 90), Array.from({ length: width }, (x, i) => i)]
     safeSquaresOne.forEach(array => array.forEach(safePlace => squares[safePlace].classList.add('safe-place')))
   }
 
@@ -227,7 +215,6 @@ function init() {
         const newCar = 81
         newCars.unshift(newCar)
       }
-
       return newCars
     }, [])
 
@@ -274,13 +261,14 @@ function init() {
     carsLeftOne.forEach(car => squares[car].classList.add('car-left', 'moving-left'))
     carsLeftTwo.forEach(car => squares[car].classList.add('car-left', 'moving-left'))
     displayRoad()
-    playerLost()
+    playerCar()
   }
 
   function displayRoad() {
     squares.forEach(square => square.classList.remove('road'))
     roadSquares = Array.from({ length: 5 * width }, (x, i) => i + (width * 5))
-    roadSquares = roadSquares.filter(road => !carsRightOne.includes(road) && !carsRightTwo.includes(road) && !carsLeftOne.includes(road) && !carsLeftTwo.includes(road))
+    roadSquares = roadSquares.filter(road => !carsRightOne.includes(road) && !carsRightTwo.includes(road)
+      && !carsLeftOne.includes(road) && !carsLeftTwo.includes(road))
     roadSquares.forEach(road => squares[road].classList.add('road'))
   }
 
@@ -294,7 +282,7 @@ function init() {
         newLogs.push(log)
       } else if (log === 17) {
         log = 9
-        newLogs.push(log)
+        newLogs.unshift(log)
       }
       return newLogs
     }, [])
@@ -305,7 +293,7 @@ function init() {
         newLogs.push(log)
       } else if (log === 35) {
         log = 27
-        newLogs.push(log)
+        newLogs.unshift(log)
       }
       return newLogs
     }, [])
@@ -344,30 +332,29 @@ function init() {
   function displayLogs() {
     squares.forEach(square => square.classList.remove('log', 'leaf', 'log-last', 'moving-left-log', 'moving-right-log'))
 
-    logsRightOne.forEach(log => squares[log].classList.add('log'))
-    logsRightTwo.forEach(log => squares[log].classList.add('log'))
+    logsRightOne.forEach(log => squares[log].classList.add('log', 'moving-right-log'))
+    logsRightTwo.forEach(log => squares[log].classList.add('log', 'moving-right-log'))
 
     leafLeftOne.forEach(log => squares[log].classList.add('leaf', 'moving-left-log'))
     leafLeftTwo.forEach(log => squares[log].classList.add('leaf', 'moving-left-log'))
-
     // ! OLD
-    // logGroup()
+
+    // console.log(playerIndex)
+    // logsRightTwo.forEach(log => squares[log].classList.add('log'))
+    // logsRightTwo.forEach(log => squares[log].animate([
+    //   { transform: 'translateX(0px)' },
+    //   { transform: 'translateX(25px)' }], {
+    //   duration: 1000
+    // }))
+
+    // logsRightTwo.sort((a, b) => a - b)
+    // const smallest = logsRightTwo[0]
+    // squares[smallest].classList.add('log-last')
     displayWater()
   }
 
-  // ! OLD
 
-  // function logGroup() {
-  //   logsRightTwo.forEach((log) => {
-  //     squares[log].classList.add('moving-right-log')
-  //     if (squares[log] !== 27 && squares[log - 1].classList.contains('water')) {
-  //       // console.log(log)
-  //       squares[log].classList.add('log-last')
-  //     } else {
-  //       squares[log].classList.add('log')
-  //     }
-  //   })
-  // }
+  // ! OLD
 
   function movePlayerOnLog() {
     if (logsRightOne.includes(playerIndex + 1) || logsRightTwo.includes(playerIndex + 1)) {
@@ -382,37 +369,17 @@ function init() {
     //     addPlayer()
     //   }
     // }
-    playerLost()
+    playerWater()
   }
 
   function movePlayerOnLogFast() {
-    leafLeftOne.forEach(leaf => {
-      leaf += 1
-      if (leaf === playerIndex) {
-        if (playerIndex % width > 0) {
-          playerIndex--
-          addPlayer()
-        }
+    if (leafLeftOne.includes(playerIndex - 1) || leafLeftTwo.includes(playerIndex - 1)) {
+      if (playerIndex % width > 0) {
+        playerIndex--
+        addPlayer()
       }
-    })
-
-    leafLeftTwo.forEach(leaf => {
-      leaf += 1
-      if (leaf === playerIndex) {
-        if (playerIndex % width > 0) {
-          playerIndex--
-          addPlayer()
-        }
-      }
-    })
-
-    // if (leafLeftOne.includes(playerIndex - 1) || leafLeftTwo.includes(playerIndex - 1)) {
-    //   if (playerIndex % width > 0) {
-    //     playerIndex--
-    //     addPlayer()
-    //   }
-    // }
-    playerLost()
+    }
+    playerWater()
   }
 
   function displayWater() {
@@ -427,7 +394,7 @@ function init() {
   // *********** MOVE PLAYER
   function handleKeyDown(e) {
     // ! Remove later
-    console.log(playerIndex)
+    // console.log(playerIndex)
     /////////////////////////////
     switch (e.keyCode) {
       case 39:
@@ -454,7 +421,8 @@ function init() {
     squares.forEach(square => square.classList.remove('player'))
     squares[playerIndex].classList.add('player')
     playerWon()
-    playerLost()
+    playerCar()
+    playerWater()
   }
 
   // *********** CHECK WON/LOST
@@ -488,7 +456,39 @@ function init() {
     }
   }
 
+  // ! MOVE LATER
+
+  let waterTimeout = null
+  let carHitTimeout = null
+  let inWater = false
+  let carHit = false
+
+  function playerWater() {
+    if (waterSquares.includes(playerIndex)) {
+      inWater = true
+      waterTimeout = setTimeout(playerLost, 400)
+    }
+  }
+
+  function playerCar() {
+    if (carsRightOne.includes(playerIndex) || carsLeftOne.includes(playerIndex)
+      || carsRightTwo.includes(playerIndex) || carsLeftTwo.includes(playerIndex)) {
+      carHit = true
+      carHitTimeout = setTimeout(playerLost, 150)
+    }
+  }
+
   function playerLost() {
+    if (inWater) {
+      inWater = false
+      clearTimeout(waterTimeout)
+    }
+
+    if (carHit) {
+      carHit = false
+      clearTimeout(carHitTimeout)
+    }
+
     if (carsRightOne.includes(playerIndex) || carsLeftOne.includes(playerIndex)
       || carsRightTwo.includes(playerIndex) || carsLeftTwo.includes(playerIndex)
       || waterSquares.includes(playerIndex)) {
@@ -538,10 +538,10 @@ function init() {
   function resetPlayer() {
     if (playerDied) {
       moveCars()
-      moveCarInterval = setInterval(moveCars, 500)
       // ! Uncomment later
+      moveCarInterval = setInterval(moveCars, 500)
       moveLogInterval = setInterval(moveLogs, 900)
-      moveLogFastInterval = setInterval(moveLogsFast, 700)
+      moveLogFastInterval = setInterval(moveLogsFast, 800)
       playerDied = false
     }
     squares.forEach(square => square.classList.remove('player-dead'))
@@ -708,8 +708,8 @@ function init() {
     carsLeftOne = [81, 78, 76]
     carsLeftTwo = [55, 57, 60]
     waterSquares = []
-    logsRightOne = [8, 9, 10, 11, 13, 14]
-    logsRightTwo = [28, 29, 30, 31, 32]
+    logsRightOne = [8, 11, 15, 17]
+    logsRightTwo = [26, 29, 31, 33]
     leafLeftOne = [38, 40, 42, 44]
     leafLeftTwo = [18, 20, 22, 24]
     countDownGame = ''
