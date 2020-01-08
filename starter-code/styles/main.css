@@ -27,6 +27,7 @@ html, body {
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  position: relative;
 }
 
 h4 {
@@ -92,7 +93,7 @@ h4 {
 
 /* Board vars */
 .grid-item.player {
-  background-image: url('../assets/dog.png');
+  background-image: url('../assets/witch-down.png');
   background-repeat: no-repeat;
   background-size: contain;
   position: relative;
@@ -101,13 +102,13 @@ h4 {
 }
 
 .grid-item.player-won {
-  background-image: url('../assets/dog.png');
+  background-image: url('../assets/witch-down.png');
   background-repeat: no-repeat;
   background-size: contain;
 }
 
 .grid-item.player-dead {
-  background-image: url('../assets/dog.png');
+  background-image: url('../assets/witch-down.png');
   background-repeat: no-repeat;
   background-size: contain;
   animation: player-dies 1s ease-out;
@@ -120,7 +121,7 @@ h4 {
   background-size: 50px;
   background-position: center;
   background-repeat: no-repeat;
-  background-color: black;
+  background-color: #e692dc;
   position: relative;
 }
 
@@ -132,7 +133,7 @@ h4 {
   -webkit-transform: translateX(-50px);
   -ms-transform: translateX(-50px);
   transform: translateX(-50px);
-  background-color: black;
+  background-color: #e692dc;
   position: absolute;
   z-index: -500;
 }
@@ -142,7 +143,7 @@ h4 {
   background-size: 50px;
   background-position: center;
   background-repeat: no-repeat;
-  background-color: black;
+  background-color: #92B2E6;
   position: relative;
 }
 
@@ -154,31 +155,39 @@ h4 {
   -webkit-transform: translateX(50px);
   -ms-transform: translateX(50px);
   transform: translateX(50px);
-  background-color: black;
+  background-color: #92B2E6;
   position: absolute;
   z-index: -500;
 }
 
-.grid-item.road {
-  background-image: url(../assets/road.png);
-  background-size: contain;
-  background-repeat: no-repeat;
+.grid-item.road-blue {
+  background-color: #92B2E6;
+  /* background-image: url(../assets/road-blue.png); */
+  /* background-size: contain;
+  background-repeat: no-repeat; */
+}
+
+.grid-item.road-pink {
+  background-color: #e692dc;
+  /* background-image: url(../assets/road-pink.png); */
+  /* background-size: contain;
+  background-repeat: no-repeat; */
 }
 
 .grid-item.road.player {
-  background-image: url(../assets/dog.png), url(../assets/road.png);
+  background-image: url(../assets/witch-down.png), url(../assets/road.png);
   background-size: contain;
   background-repeat: no-repeat;
 }
 
 .grid-item.safe-place.homes {
-  background-image: url(../assets/houses.png), url(../assets/grass.png);
+  background-image: url(../assets/cauldron.png), url(../assets/grass-2.png);
   background-size: contain;
   background-repeat: no-repeat;
 }
 
 .grid-item.safe-place.player-won {
-  background-image: url(../assets/dog-happy.png), url(../assets/houses.png), url(../assets/grass.png);
+  background-image: url(../assets/witch-happy.png), url(../assets/cauldron.png), url(../assets/grass-2.png);
   background-size: contain;
 } 
 
@@ -194,9 +203,8 @@ h4 {
   background-repeat: no-repeat;
   background-color: #1928f0;
   position: relative;
-  z-index: 20;
 }
-
+/* 
 .grid-item.log::before {
   content: "";
   display: block;
@@ -209,16 +217,16 @@ h4 {
   background-color: #1928f0;
   position: absolute;
   z-index: -500;
-}
+} */
 
 
 .grid-item.log.player{
-  background-image: url(../assets/dog.png), url(../assets/log.png);
+  background-image: url(../assets/witch-right.png), url(../assets/log.png);
   background-size: center;
 }
 
 .grid-item.leaf {
-  background-image: url(../assets/lilypad.png);
+  background-image: url(../assets/cloud.png);
   background-size: cover;
   background-color: #1928f0;
   position: relative;
@@ -239,31 +247,31 @@ h4 {
 }
 
 .grid-item.leaf.player{
-  background-image: url(../assets/dog.png), url(../assets/lilypad.png);
+  background-image: url(../assets/witch-left.png), url(../assets/cloud.png);
   background-size: contain;
 }
 
 .grid-item.safe-place {
   position: relative;
   z-index: 1;
-  background-image: url(../assets/grass.png);
+  background-image: url(../assets/grass-2.png);
   background-size: contain;
 }
 
 .grid-item.safe-place.player{
-  background-image: url(../assets/dog.png), url(../assets/grass.png);
+  background-image: url(../assets/witch-down.png), url(../assets/grass-2.png);
   background-size: contain;
 }
 
 /* ///////////////////////////////////////// */
 
 .moving-right {
-  animation: right .59s linear;
+  animation: right .6s linear;
 } 
 
 
 .moving-left {
-  animation: left .59s linear;
+  animation: left .6s linear;
 } 
 
 .moving-right-log {

@@ -69,10 +69,10 @@ function init() {
   // cars
   let carsRight = [81, 84, 63, 69]
   let carsLeft = [73, 79, 54, 57, 61]
-  let roadSquares = []
+  // const roadSquares = []
   // water
   let waterSquares = []
-  let logsRight = [10, 13, 16, 27, 29, 31, 33]
+  let logsRight = [10, 11, 12, 13, 27, 28, 29, 30, 31]
   let leafLeft = [38, 40, 42, 44, 18, 20, 22, 24]
   // intervals and timeouts
   let moveCarInterval = null
@@ -84,8 +84,8 @@ function init() {
   let timeOutGame = null
   // player
   // ! Uncomment later
-  // let playerIndex = width * height - 5
-  let playerIndex = 48
+  let playerIndex = width * height - 5
+  // let playerIndex = 0
   // !
   let playerLives = 3
   let frogFamily = 5
@@ -234,13 +234,19 @@ function init() {
     playerCar()
   }
 
-  function displayRoad() {
-    squares.forEach(square => square.classList.remove('road'))
-    roadSquares = Array.from({ length: 4 * width }, (x, i) => i + (width * 6))
-    roadSquares = roadSquares.filter(road => !carsRight.includes(road) && !carsLeft.includes(road))
-    roadSquares.forEach(road => squares[road].classList.add('road'))
-  }
+  // ! CHANGE
+  // let roadSquaresTwo = ''
 
+  function displayRoad() {
+    squares.forEach(square => square.classList.remove('road-blue'))
+    squares.forEach(square => square.classList.remove('road-pink'))
+    let roadSquaresOne = [Array.from({ length: width }, (x, i) => i + width * 6), Array.from({ length: width }, (x, i) => i + width * 8)]
+    let roadSquaresTwo = [Array.from({ length: width }, (x, i) => i + width * 7), Array.from({ length: width }, (x, i) => i + width * 9)]
+    roadSquaresOne = roadSquaresOne.filter(road => !carsRight.includes(road) && !carsLeft.includes(road))
+    roadSquaresTwo = roadSquaresTwo.filter(road => !carsRight.includes(road) && !carsLeft.includes(road))
+    roadSquaresOne.forEach(array => array.forEach(road => squares[road].classList.add('road-blue')))
+    roadSquaresTwo.forEach(array => array.forEach(road => squares[road].classList.add('road-pink')))
+  }
 
   // *********** WATER/LOGS
 
@@ -271,8 +277,8 @@ function init() {
   function displayLogs() {
     squares[playerIndex].style.backgroundImage = ''
     setBackgroundImg()
-    squares.forEach(square => square.classList.remove('log', 'leaf', 'log-last', 'moving-left-log', 'moving-right-log'))
-    logsRight.forEach(log => squares[log].classList.add('log', 'moving-right-log'))
+    squares.forEach(square => square.classList.remove('log', 'leaf', 'log-last', 'moving-left-log'))
+    logsRight.forEach(log => squares[log].classList.add('log'))
     leafLeft.forEach(log => squares[log].classList.add('leaf', 'moving-left-log'))
     displayWater()
   }
@@ -324,12 +330,12 @@ function init() {
       case 39:
         if (playerIndex % width < width - 1) playerIndex++
         setBackgroundImg()
-        squares[playerIndex].style.backgroundImage = `url(assets/dog-right.png), url(assets/${backImg})`
+        squares[playerIndex].style.backgroundImage = `url(assets/witch-right.png), url(assets/${backImg})`
         break
       case 37:
         if (playerIndex % width > 0) playerIndex--
         setBackgroundImg()
-        squares[playerIndex].style.backgroundImage = `url(assets/dog-left.png), url(assets/${backImg})`
+        squares[playerIndex].style.backgroundImage = `url(assets/witch-left.png), url(assets/${backImg})`
         break
       case 38:
         if (playerIndex - width >= 0) {
@@ -337,12 +343,12 @@ function init() {
           addPoints(10)
         }
         setBackgroundImg()
-        squares[playerIndex].style.backgroundImage = `url(assets/dog.png), url(assets/${backImg})`
+        squares[playerIndex].style.backgroundImage = `url(assets/witch.png), url(assets/${backImg})`
         break
       case 40:
         if (playerIndex + width < width * height) playerIndex += width
         setBackgroundImg()
-        squares[playerIndex].style.backgroundImage = `url(assets/dog-down.png), url(assets/${backImg})`
+        squares[playerIndex].style.backgroundImage = `url(assets/witch-down.png), url(assets/${backImg})`
         break
     }
     // squares.forEach(square => square.classList.remove('player'))
@@ -365,6 +371,7 @@ function init() {
     if (homes.includes(playerIndex)) {
       addPoints(50)
       frogsHome += 1
+      console.log(frogsHome)
       frogFamily -= 1
       squares[playerIndex].classList.remove('homes')
       squares[playerIndex].classList.add('player-won')
@@ -383,7 +390,6 @@ function init() {
       } else {
         addPoints(1000)
         gameWon = true
-        setHighscore(playerScore)
         stopGame()
         showResult()
       }
@@ -393,7 +399,7 @@ function init() {
   function playerWater() {
     if (waterSquares.includes(playerIndex)) {
       inWater = true
-      waterTimeout = setTimeout(playerLost, 375)
+      waterTimeout = setTimeout(playerLost, 450)
     }
   }
 
@@ -460,7 +466,7 @@ function init() {
     // ! Background img
     squares[playerIndex].style.backgroundImage = ''
     // stop car/log animation
-    squares.forEach(square => square.classList.remove('moving-right', 'moving-left', 'moving-left-log', 'moving-right-log'))
+    squares.forEach(square => square.classList.remove('moving-right', 'moving-left', 'moving-left-log'))
     playerIndex = width * height - 5
     setTimeout(resetPlayer, 1000)
     carHit = false
@@ -477,10 +483,11 @@ function init() {
       playerDied = false
     }
     squares.forEach(square => square.classList.remove('player-dead'))
-    playerIndex = width * height - 5
+    // playerIndex = width * height - 5
+    playerIndex = 0
     setBackgroundImg()
     addPlayer()
-    squares[playerIndex].style.backgroundImage = 'url(assets/dog.png), url(assets/grass.png)'
+    squares[playerIndex].style.backgroundImage = 'url(assets/witch-down.png), url(assets/grass.png)'
   }
 
   // *********** SHOW/UPDATE SCORE
@@ -615,7 +622,9 @@ function init() {
   }
 
   function resetGame() {
-    stopGame()
+    if (!gameWon || !gameLost) {
+      stopGame()
+    }
     if (counterRunning) {
       removeCounter()
     }
@@ -640,7 +649,7 @@ function init() {
     carsRight = [81, 84, 63, 69]
     carsLeft = [73, 79, 54, 57, 61]
     waterSquares = []
-    logsRight = [10, 13, 16, 27, 29, 31, 33]
+    logsRight = [10, 11, 12, 13, 27, 28, 29, 30, 31]
     leafLeft = [38, 40, 42, 44, 18, 20, 22, 24]
     countDownGame = ''
     counterTime = 3
