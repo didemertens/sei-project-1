@@ -177,10 +177,10 @@ h4 {
   background-repeat: no-repeat;
 }
 
-/* .grid-item.safe-place.player-won {
+.grid-item.safe-place.player-won {
   background-image: url(../assets/dog-happy.png), url(../assets/houses.png), url(../assets/grass.png);
   background-size: contain;
-} */
+} 
 
 .grid-item.water {
   background-image: url(../assets/water.png);

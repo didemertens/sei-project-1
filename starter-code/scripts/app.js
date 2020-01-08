@@ -307,6 +307,7 @@ function init() {
 
   // ! MOVE LATER
   let backImg = ''
+  // let playerTimeout = null
 
   function setBackgroundImg() {
     const img = squares[playerIndex]
@@ -318,6 +319,7 @@ function init() {
   // *********** MOVE PLAYER
   function handleKeyDown(e) {
     squares[playerIndex].style.backgroundImage = ''
+
     switch (e.keyCode) {
       case 39:
         if (playerIndex % width < width - 1) playerIndex++
@@ -343,13 +345,15 @@ function init() {
         squares[playerIndex].style.backgroundImage = `url(assets/dog-down.png), url(assets/${backImg})`
         break
     }
+    // squares.forEach(square => square.classList.remove('player'))
     addPlayer()
   }
 
   function addPlayer() {
+    // clearTimeout(playerTimeout)
     squares.forEach(square => square.classList.remove('player'))
     squares[playerIndex].classList.add('player')
-    playerWon()
+    setTimeout(playerWon, 250)
     playerCar()
     playerWater()
   }
@@ -357,6 +361,7 @@ function init() {
   // *********** CHECK WON/LOST
 
   function playerWon() {
+    squares[playerIndex].style.backgroundImage = ''
     if (homes.includes(playerIndex)) {
       addPoints(50)
       frogsHome += 1
@@ -394,14 +399,14 @@ function init() {
 
   function playerCar() {
     carsRight.forEach(car => {
-      if (car + 1 === playerIndex) {
+      if (car + 1 === playerIndex || car === playerIndex) {
         carHit = true
         playerLost()
       }
     })
 
     carsLeft.forEach(car => {
-      if (car - 1 === playerIndex) {
+      if (car - 1 === playerIndex || car === playerIndex) {
         carHit = true
         playerLost()
       }
@@ -452,7 +457,8 @@ function init() {
     clearInterval(moveLeafFastInterval)
     squares[playerIndex].classList.remove('player')
     squares[playerIndex].classList.add('player-dead')
-    squares[playerIndex].style.backgroundImage = `url(assets/${backImg})`
+    // ! Background img
+    squares[playerIndex].style.backgroundImage = ''
     // stop car/log animation
     squares.forEach(square => square.classList.remove('moving-right', 'moving-left', 'moving-left-log', 'moving-right-log'))
     playerIndex = width * height - 5
@@ -463,11 +469,11 @@ function init() {
   function resetPlayer() {
     if (playerDied) {
       moveCars()
-      // moveCarInterval = setInterval(moveCars, 600)
+      moveCarInterval = setInterval(moveCars, 600)
       moveLogs()
-      // moveLogInterval = setInterval(moveLogs, 900)
+      moveLogInterval = setInterval(moveLogs, 900)
       moveLeafFast()
-      // moveLeafFastInterval = setInterval(moveLeafFast, 800)
+      moveLeafFastInterval = setInterval(moveLeafFast, 800)
       playerDied = false
     }
     squares.forEach(square => square.classList.remove('player-dead'))
@@ -631,8 +637,8 @@ function init() {
     // board
     homes = [8, 6, 4, 2, 0]
     squares = []
-    carsRight = [80, 84, 63, 69]
-    carsLeft = [81, 78, 76, 55, 57, 60]
+    carsRight = [81, 84, 63, 69]
+    carsLeft = [73, 79, 54, 57, 61]
     waterSquares = []
     logsRight = [10, 13, 16, 27, 29, 31, 33]
     leafLeft = [38, 40, 42, 44, 18, 20, 22, 24]
@@ -649,7 +655,7 @@ function init() {
     playerDied = false
     // intervals and timeouts
     // moveCarInterval = null
-    // addingCarsTimeOut = null
+    // // addingCarsTimeOut = null
     // moveLogInterval = null
     // moveLeafFastInterval = null
     // counterTimeOut = null
