@@ -54,6 +54,8 @@ function init() {
   const gameResultDisplay = document.querySelector('.game-lives-score')
   const lifeDisplay = document.querySelector('#player-lives')
   const scoreDisplay = document.querySelector('#player-score')
+  const difficultyEasy = document.querySelector('#easy-choice')
+  const difficultyMedium = document.querySelector('#medium-choice')
 
   // GAME VARIABLES
   let gamePlaying = false
@@ -128,12 +130,26 @@ function init() {
     playGame()
   }
 
+  // animation: move-grid 1s infinite;
+
   function playGame() {
     if (!gamePlaying) {
       gamePlaying = true
-      // Show reset button
-      start.removeEventListener('click', playGame)
-      start.addEventListener('click', resetGame)
+      // ! Check game difficulty
+      if (difficultyEasy.checked) {
+        playerLives = 5
+        lifeDisplay.innerHTML = playerLives
+      } else if (difficultyMedium.checked) {
+        playerLives = 3
+        lifeDisplay.innerHTML = playerLives
+      } else {
+        playerLives = 1
+        lifeDisplay.innerHTML = playerLives
+      }
+      // ! Delete event listeners?
+      // start.removeEventListener('click', playGame)
+      // start.addEventListener('click', resetGame)
+      // Show reset btn
       start.innerHTML = 'Reset'
       // Counter
       // ! Delete
@@ -665,16 +681,16 @@ function init() {
     playerScoreShown = false
     highscoreCleared = false
     highscoreShown = false
-    // Play again
-    playGame()
+    // ! Delete? Play again
+    // playGame()
   }
 
   // Event listeners
-  start.addEventListener('click', playGame)
+  start.addEventListener('click', createStartScreen)
   playBtn.addEventListener('click', removeStartScreen)
 
   // ! DELETE LATER
-  playGame()
+  // playGame()
   // gameLost = true
   // showResult()
 }

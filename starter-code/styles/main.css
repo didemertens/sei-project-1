@@ -2,22 +2,12 @@
   --main-bg-color: #eeeeee;
   --main-whiter-color: #f5f5f5;
   --main-black-color: #000103;
-  --sky-pink-color: #E15871;
-  --sky-purple-pink-color: #D960B1;
   --road-lighter-blue-color: #112c9e;
   --road-blue-color: #0F278E;
   --player-dies-color: #5a0f0f;
-  /* --horse-green-color: #205126; */
   --btn-yellow-color: #F7C015;
+  --sky-pink-color: #DE5B8D;
 }
-
-/* .game-lives-score
-visibility: hidden;
-.grid */
-/* display: flex; */
-/* .start {
-  visibility: hidden;
-} */
 
 * {
   box-sizing: border-box;
@@ -103,6 +93,25 @@ html, body {
   background-color: var(--btn-yellow-color);
 }
 
+.difficulty {
+  margin-top: 10px;
+  margin-left: -25px;
+  display:flex;
+}
+
+.difficulty-choice {
+  color: var(--main-bg-color);
+  margin-left: 5px;
+}
+
+.player-choice:not(:last-child) {
+  margin-left: 25px;
+}
+
+.player-choice:checked + label {
+  color: var(--sky-pink-color);
+}
+
 .start {
   visibility: hidden;
 }
@@ -116,7 +125,6 @@ html, body {
   -moz-box-shadow: 9px 10px 5px -6px rgba(0,0,0,0.75);
   box-shadow: 9px 10px 5px -6px rgba(0,0,0,0.75);
   border-radius: 4px;
-  /* display: flex; */
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
@@ -175,7 +183,7 @@ h4 {
   border: 4px solid var(--main-black-color);
 }
 
-.start:hover, .submit-btn:hover, .clear-btn {
+.start:hover, .submit-btn:hover, .clear-btn:hover {
   color: white;
   background-color: var(--btn-yellow-color);
 }
@@ -333,12 +341,10 @@ h4 {
   background-size: contain;
 }
 
-/* ///////////////////////////////////////// */
-
+/* Animations */
 .moving-right {
   animation: right-bird .6s linear;
 } 
-
 
 .moving-left {
   animation: left-horse .6s linear;
@@ -399,29 +405,6 @@ h4 {
     -ms-transform: translateX(-50px);
     transform: translateX(-50px);
     background-image: url('../assets/horse.png');
-  }
-}
-
-@keyframes right {
-  0% {
-    -webkit-transform: translateX(0px);
-    -ms-transform: translateX(0px);
-    transform: translateX(0px);
-  }
-  25% {
-    -webkit-transform: translateX(12.5px);
-    -ms-transform: translateX(12.5px);
-    transform: translateX(12.5px);
-  }
-  50% {
-    -webkit-transform: translateX(25px);
-    -ms-transform: translateX(25px);
-    transform: translateX(25px);
-  }
-  100% {
-    -webkit-transform: translateX(50px);
-    -ms-transform: translateX(50px);
-    transform: translateX(50px);
   }
 }
 
