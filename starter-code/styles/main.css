@@ -1,3 +1,10 @@
+:root {
+  --main-bg-color: #eeeeee;
+  --road-lighter-blue-color: #112c9e;
+  --road-blue-color: #0F278E;
+  --player-dies-color: #5a0f0f;
+}
+
 * {
   box-sizing: border-box;
 } 
@@ -8,10 +15,12 @@ html, body {
 }
 
 .container {
+  height: 100vh;
   display: flex;
   align-items: center;
   flex-direction: column;
   font-family: 'Galindo', cursive;
+  background-color: var(--main-bg-color);
 }
 
 .game-lives-score {
@@ -19,9 +28,10 @@ html, body {
 }
 
 .grid {
-  height: 554px;
-  width: 454px;
-  border: 2px solid black;
+  height: 557px;
+  width: 456px;
+  border: 3px solid black;
+  border-radius: 4px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -112,16 +122,16 @@ h4 {
   background-repeat: no-repeat;
   background-size: contain;
   animation: player-dies 1s ease-out;
-  background-color: rgb(90, 15, 15);
+  background-color: var(--player-dies-color);
   z-index: 100;
 }
 
 .grid-item.car-right {
-  background-image: url('../assets/car-right.png');
+  background-image: url('../assets/bird.png');
   background-size: 50px;
   background-position: center;
   background-repeat: no-repeat;
-  background-color: #e692dc;
+  background-color: var(--road-lighter-blue-color);
   position: relative;
 }
 
@@ -133,17 +143,17 @@ h4 {
   -webkit-transform: translateX(-50px);
   -ms-transform: translateX(-50px);
   transform: translateX(-50px);
-  background-color: #e692dc;
+  background-color: var(--road-lighter-blue-color);
   position: absolute;
   z-index: -500;
 }
 
 .grid-item.car-left {
-  background-image: url('../assets/car-left.png');
+  background-image: url('../assets/horse-2.png');
   background-size: 50px;
   background-position: center;
   background-repeat: no-repeat;
-  background-color: #92B2E6;
+  background-color: var(--road-blue-color);
   position: relative;
 }
 
@@ -155,20 +165,20 @@ h4 {
   -webkit-transform: translateX(50px);
   -ms-transform: translateX(50px);
   transform: translateX(50px);
-  background-color: #92B2E6;
+  background-color: var(--road-blue-color);
   position: absolute;
   z-index: -500;
 }
 
 .grid-item.road-blue {
-  background-color: #92B2E6;
+  background-color: var(--road-blue-color);
   /* background-image: url(../assets/road-blue.png); */
   /* background-size: contain;
   background-repeat: no-repeat; */
 }
 
 .grid-item.road-pink {
-  background-color: #e692dc;
+  background-color: var(--road-lighter-blue-color);
   /* background-image: url(../assets/road-pink.png); */
   /* background-size: contain;
   background-repeat: no-repeat; */
@@ -181,13 +191,13 @@ h4 {
 }
 
 .grid-item.safe-place.homes {
-  background-image: url(../assets/cauldron.png), url(../assets/grass-2.png);
+  background-image: url(../assets/cauldron.png), url(../assets/ground-2.png);
   background-size: contain;
   background-repeat: no-repeat;
 }
 
 .grid-item.safe-place.player-won {
-  background-image: url(../assets/witch-happy.png), url(../assets/cauldron.png), url(../assets/grass-2.png);
+  background-image: url(../assets/witch-happy.png), url(../assets/cauldron.png), url(../assets/ground-2.png);
   background-size: contain;
 } 
 
@@ -197,38 +207,21 @@ h4 {
 }
 
 .grid-item.log {
-  background-image: url(../assets/log.png);
+  background-image: url(../assets/rainbow.png), url(../assets/water.png);
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
-  background-color: #1928f0;
   position: relative;
 }
-/* 
-.grid-item.log::before {
-  content: "";
-  display: block;
-  height: 50px;
-  width: 50px;
-  -webkit-transform: translateX(-50px);
-  -ms-transform: translateX(-50px);
-  transform: translateX(-50px);
-  background-repeat: no-repeat;
-  background-color: #1928f0;
-  position: absolute;
-  z-index: -500;
-} */
-
 
 .grid-item.log.player{
-  background-image: url(../assets/witch-right.png), url(../assets/log.png);
+  background-image: url(../assets/witch-right.png), url(../assets/rainbow.png), url(../assets/water.png);
   background-size: center;
 }
 
 .grid-item.leaf {
-  background-image: url(../assets/cloud.png);
+  background-image: url(../assets/cloud.png), url(../assets/water.png);
   background-size: cover;
-  background-color: #1928f0;
   position: relative;
   z-index: 20;
 }
@@ -241,37 +234,37 @@ h4 {
   -webkit-transform: translateX(50px);
   -ms-transform: translateX(50px);
   transform: translateX(50px);
-  background-color: #1928f0;
+  background-image: url(../assets/water.png);
   position: absolute;
   z-index: -500;
 }
 
 .grid-item.leaf.player{
-  background-image: url(../assets/witch-left.png), url(../assets/cloud.png);
+  background-image: url(../assets/witch-left.png), url(../assets/cloud.png), url(../assets/water.png);
   background-size: contain;
 }
 
 .grid-item.safe-place {
   position: relative;
   z-index: 1;
-  background-image: url(../assets/grass-2.png);
+  background-image: url(../assets/ground-2.png);
   background-size: contain;
 }
 
 .grid-item.safe-place.player{
-  background-image: url(../assets/witch-down.png), url(../assets/grass-2.png);
+  background-image: url(../assets/witch-down.png), url(../assets/ground-2.png);
   background-size: contain;
 }
 
 /* ///////////////////////////////////////// */
 
 .moving-right {
-  animation: right .6s linear;
+  animation: right-bird .6s linear;
 } 
 
 
 .moving-left {
-  animation: left .6s linear;
+  animation: left-horse .6s linear;
 } 
 
 .moving-right-log {
@@ -281,6 +274,60 @@ h4 {
 .moving-left-log {
   animation: left .8s linear;
 } 
+
+@keyframes right-bird {
+  0% {
+    -webkit-transform: translateX(0px);
+    -ms-transform: translateX(0px);
+    transform: translateX(0px);
+    background-image: url('../assets/bird.png');
+  }
+  25% {
+    -webkit-transform: translateX(12.5px);
+    -ms-transform: translateX(12.5px);
+    transform: translateX(12.5px);
+    background-image: url('../assets/bird.png');
+  }
+  50% {
+    -webkit-transform: translateX(25px);
+    -ms-transform: translateX(25px);
+    transform: translateX(25px);
+    background-image: url('../assets/bird-2.png');
+  }
+  100% {
+    -webkit-transform: translateX(50px);
+    -ms-transform: translateX(50px);
+    transform: translateX(50px);
+    background-image: url('../assets/bird-2.png');
+  }
+}
+
+@keyframes left-horse {
+  0% {
+    -webkit-transform: translateX(0px);
+    -ms-transform: translateX(0px);
+    transform: translateX(0px);
+    background-image: url('../assets/horse-2.png');
+  }
+  25% {
+    -webkit-transform: translateX(-12.5px);
+    -ms-transform: translateX(-12.5px);
+    transform: translateX(-12.5px);
+    background-image: url('../assets/horse-2.png');
+  }
+  50% {
+    -webkit-transform: translateX(-25px);
+    -ms-transform: translateX(-25px);
+    transform: translateX(-25px);
+    background-image: url('../assets/horse.png');
+  }
+  100% {
+    -webkit-transform: translateX(-50px);
+    -ms-transform: translateX(-50px);
+    transform: translateX(-50px);
+    background-image: url('../assets/horse.png');
+  }
+}
 
 @keyframes right {
   0% {
@@ -330,6 +377,7 @@ h4 {
 
 @keyframes player-dies {
   100% {
-    background-image: url('../assets/cross.png');
+    background-image: url('../assets/ghost.png');
+    background-color: var(--player-dies-color);
   }
 }
