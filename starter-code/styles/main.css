@@ -209,7 +209,7 @@ h4 {
   z-index: 100;
 }
 
-.grid-item.car-right {
+.grid-item.bird-right {
   background-image: url('../assets/bird.png');
   background-size: 50px;
   background-position: center;
@@ -218,7 +218,7 @@ h4 {
   position: relative;
 }
 
-.grid-item.car-right::before {
+.grid-item.bird-right::before {
   content: "";
   display: block;
   height: 100%;
@@ -231,7 +231,7 @@ h4 {
   z-index: -500;
 }
 
-.grid-item.car-left {
+.grid-item.horse-left {
   background-image: url('../assets/horse-2.png');
   background-size: 50px;
   background-position: center;
@@ -240,7 +240,7 @@ h4 {
   position: relative;
 }
 
-.grid-item.car-left::before {
+.grid-item.horse-left::before {
   content: "";
   display: block;
   height: 50px;
@@ -268,13 +268,13 @@ h4 {
 }
 
 .grid-item.safe-place.homes {
-  background-image: url(../assets/cauldron.png), url(../assets/ground-2.png);
+  background-image: url(../assets/cauldron.png), url(../assets/ground.png);
   background-size: contain;
   background-repeat: no-repeat;
 }
 
 .grid-item.safe-place.player-won {
-  background-image: url(../assets/witch-happy.png), url(../assets/cauldron.png), url(../assets/ground-2.png);
+  background-image: url(../assets/witch-happy.png), url(../assets/cauldron.png), url(../assets/ground.png);
   background-size: contain;
 } 
 
@@ -283,7 +283,7 @@ h4 {
   background-size: contain;
 }
 
-.grid-item.log {
+.grid-item.rainbow {
   background-image: url(../assets/rainbow.png), url(../assets/water.png);
   background-position: center;
   background-size: contain;
@@ -291,19 +291,19 @@ h4 {
   position: relative;
 }
 
-.grid-item.log.player{
+.grid-item.rainbow.player{
   background-image: url(../assets/witch-right.png), url(../assets/rainbow.png), url(../assets/water.png);
   background-size: center;
 }
 
-.grid-item.leaf {
+.grid-item.cloud {
   background-image: url(../assets/cloud.png), url(../assets/water.png);
   background-size: cover;
   position: relative;
   z-index: 20;
 }
 
-.grid-item.leaf::before {
+.grid-item.cloud::before {
   content: "";
   display: block;
   height: 50px;
@@ -316,7 +316,7 @@ h4 {
   z-index: -500;
 }
 
-.grid-item.leaf.player{
+.grid-item.cloud.player{
   background-image: url(../assets/witch-left.png), url(../assets/cloud.png), url(../assets/water.png);
   background-size: contain;
 }
@@ -324,12 +324,12 @@ h4 {
 .grid-item.safe-place {
   position: relative;
   z-index: 1;
-  background-image: url(../assets/ground-2.png);
+  background-image: url(../assets/ground.png);
   background-size: contain;
 }
 
 .grid-item.safe-place.player{
-  background-image: url(../assets/witch-down.png), url(../assets/ground-2.png);
+  background-image: url(../assets/witch-down.png), url(../assets/ground.png);
   background-size: contain;
 }
 
@@ -344,11 +344,7 @@ h4 {
   animation: left-horse .6s linear;
 } 
 
-.moving-right-log {
-  animation: right .9s linear;
-} 
-
-.moving-left-log {
+.moving-left-cloud {
   animation: left .8s linear;
 } 
 

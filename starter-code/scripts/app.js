@@ -62,34 +62,30 @@ function init() {
   // board
   const width = 9
   const height = 11
-
+  let squares = []
+  let backImg = ''
+  // Counter
   let counterRunning = false
   let countDownGame = ''
   let counterTime = 3
-
-  let squares = []
   let homes = [8, 6, 4, 2, 0]
-  // cars
-  let carsRight = [81, 84, 63, 69]
-  let carsLeft = [73, 79, 54, 57, 61]
+  // Enemies
+  let birdsRight = [81, 84, 63, 69]
+  let horsesLeft = [73, 79, 54, 57, 61]
   // const roadSquares = []
   // water
   let waterSquares = []
-  let logsRight = [10, 11, 12, 13, 27, 28, 29, 30, 31]
-  let leafLeft = [38, 40, 42, 44, 18, 20, 22, 24]
+  let rainbowRight = [10, 11, 12, 13, 27, 28, 29, 30, 31]
+  let cloudLeft = [38, 40, 42, 44, 18, 20, 22, 24]
   // intervals and timeouts
-  let moveCarInterval = null
-  // let addingCarsTimeOut = null
-  let moveLogInterval = null
-  let moveLeafFastInterval = null
+  let moveEnemiesInterval = null
+  let moveRainbowInterval = null
+  let moveCloudFastInterval = null
   let counterTimeOut = null
   let timeOutRemoveCounter = null
   let timeOutGame = null
   // player
-  // ! Uncomment later
   let playerIndex = width * height - 5
-  // let playerIndex = 0
-  // !
   let playerLives = 3
   let frogFamily = 5
   let frogsHome = 0
@@ -98,10 +94,11 @@ function init() {
   let gameLost = false
   let playerDied = false
   let waterTimeout = null
-  // const carHitTimeout = null
   let inWater = false
-  let carHit = false
+  let enemiesHit = false
   // Highscore
+  let highscoreDiv = ''
+  let highscoreTitle = ''
   let userNameDiv = ''
   let nameDisplay = ''
   let userName = ''
@@ -140,16 +137,15 @@ function init() {
       start.innerHTML = 'Reset'
       // Counter
       // ! Delete
-      // makeGame()
+      makeGame()
       // ! Uncomment later
-      if (!counterRunning) {
-        counterRunning = true
-        createCounter()
-      }
+      // if (!counterRunning) {
+      //   counterRunning = true
+      //   createCounter()
+      // }
     }
   }
 
-  // Create/show counter
   function createCounter() {
     grid.style.backgroundColor = 'black'
     countDownGame = document.createElement('h2')
@@ -189,7 +185,6 @@ function init() {
   }
 
   // *********** GAME BOARD
-
   function createBoard() {
     Array(width * height).join('.').split('.').forEach(() => {
       const square = document.createElement('div')
@@ -197,14 +192,12 @@ function init() {
       squares.push(square)
       grid.appendChild(square)
     })
-    // ! Uncomment later
-    moveLogs()
-    moveLeafFast()
-    moveLogInterval = setInterval(moveLogs, 900)
-    moveLeafFastInterval = setInterval(moveLeafFast, 800)
-    // ! Uncomment later
-    moveCars()
-    moveCarInterval = setInterval(moveCars, 600)
+    moveRainbow()
+    moveCloudFast()
+    moveRainbowInterval = setInterval(moveRainbow, 900)
+    moveCloudFastInterval = setInterval(moveCloudFast, 800)
+    moveEnemies()
+    moveEnemiesInterval = setInterval(moveEnemies, 600)
     createHomes()
     createSafePlaces()
     setBackgroundImg()
@@ -224,86 +217,81 @@ function init() {
     safeSquaresOne.forEach(array => array.forEach(safePlace => squares[safePlace].classList.add('safe-place')))
   }
 
-  // *********** CARS
-
-  function moveCars() {
-    carsRight = carsRight.map(car => {
-      if (car % width < width - 1) {
-        return car + 1
+  // *********** ENEMIES
+  function moveEnemies() {
+    birdsRight = birdsRight.map(bird => {
+      if (bird % width < width - 1) {
+        return bird + 1
       } else {
-        return car - (width - 1)
+        return bird - (width - 1)
       }
     })
 
-    carsLeft = carsLeft.map(car => {
-      if (car % width > 0) {
-        return car - 1
+    horsesLeft = horsesLeft.map(horse => {
+      if (horse % width > 0) {
+        return horse - 1
       } else {
-        return car + (width - 1)
+        return horse + (width - 1)
       }
     })
-    displayCars()
+    displayEnemies()
   }
 
-  function displayCars() {
-    squares.forEach(square => square.classList.remove('car-right', 'car-left', 'moving-right', 'moving-left'))
-    carsRight.forEach(car => squares[car].classList.add('car-right', 'moving-right'))
-    carsLeft.forEach(car => squares[car].classList.add('car-left', 'moving-left'))
+  function displayEnemies() {
+    squares.forEach(square => square.classList.remove('bird-right', 'horse-left', 'moving-right', 'moving-left'))
+    birdsRight.forEach(bird => squares[bird].classList.add('bird-right', 'moving-right'))
+    horsesLeft.forEach(horse => squares[horse].classList.add('horse-left', 'moving-left'))
     displayRoad()
-    playerCar()
+    playerEnemies()
   }
-
-  // ! CHANGE
-  // let roadSquaresTwo = ''
 
   function displayRoad() {
     squares.forEach(square => square.classList.remove('road-blue'))
     squares.forEach(square => square.classList.remove('road-pink'))
     let roadSquaresOne = [Array.from({ length: width }, (x, i) => i + width * 6), Array.from({ length: width }, (x, i) => i + width * 8)]
     let roadSquaresTwo = [Array.from({ length: width }, (x, i) => i + width * 7), Array.from({ length: width }, (x, i) => i + width * 9)]
-    roadSquaresOne = roadSquaresOne.filter(road => !carsRight.includes(road) && !carsLeft.includes(road))
-    roadSquaresTwo = roadSquaresTwo.filter(road => !carsRight.includes(road) && !carsLeft.includes(road))
+    roadSquaresOne = roadSquaresOne.filter(road => !birdsRight.includes(road) && !horsesLeft.includes(road))
+    roadSquaresTwo = roadSquaresTwo.filter(road => !birdsRight.includes(road) && !horsesLeft.includes(road))
     roadSquaresOne.forEach(array => array.forEach(road => squares[road].classList.add('road-blue')))
     roadSquaresTwo.forEach(array => array.forEach(road => squares[road].classList.add('road-pink')))
   }
 
-  // *********** WATER/LOGS
-
-  function moveLogs() {
-    logsRight = logsRight.map(log => {
-      if (log % width < width - 1) {
-        return log + 1
+  // *********** WATER/RAINBOW/CLOUD
+  function moveRainbow() {
+    rainbowRight = rainbowRight.map(rainbow => {
+      if (rainbow % width < width - 1) {
+        return rainbow + 1
       } else {
-        return log - (width - 1)
+        return rainbow - (width - 1)
       }
     })
-    displayLogs()
-    movePlayerOnLog()
+    displayWaterPlatforms()
+    movePlayerOnRainbow()
   }
 
-  function moveLeafFast() {
-    leafLeft = leafLeft.map(leaf => {
-      if (leaf % width > 0) {
-        return leaf - 1
+  function moveCloudFast() {
+    cloudLeft = cloudLeft.map(cloud => {
+      if (cloud % width > 0) {
+        return cloud - 1
       } else {
-        return leaf + (width - 1)
+        return cloud + (width - 1)
       }
     })
-    displayLogs()
-    movePlayerOnLogFast()
+    displayWaterPlatforms()
+    movePlayerOnCloudFast()
   }
 
-  function displayLogs() {
+  function displayWaterPlatforms() {
     squares[playerIndex].style.backgroundImage = ''
     setBackgroundImg()
-    squares.forEach(square => square.classList.remove('log', 'leaf', 'log-last', 'moving-left-log'))
-    logsRight.forEach(log => squares[log].classList.add('log'))
-    leafLeft.forEach(log => squares[log].classList.add('leaf', 'moving-left-log'))
+    squares.forEach(square => square.classList.remove('rainbow', 'cloud', 'moving-left-cloud'))
+    rainbowRight.forEach(rainbow => squares[rainbow].classList.add('rainbow'))
+    cloudLeft.forEach(cloud => squares[cloud].classList.add('cloud', 'moving-left-cloud'))
     displayWater()
   }
 
-  function movePlayerOnLog() {
-    if (logsRight.includes(playerIndex + 1)) {
+  function movePlayerOnRainbow() {
+    if (rainbowRight.includes(playerIndex + 1)) {
       if (playerIndex % width < width - 1) {
         playerIndex++
         addPlayer()
@@ -312,13 +300,12 @@ function init() {
     playerWater()
   }
 
-  function movePlayerOnLogFast() {
-    if (leafLeft.includes(playerIndex - 1)) {
+  function movePlayerOnCloudFast() {
+    if (cloudLeft.includes(playerIndex - 1)) {
       if (playerIndex % width > 0) {
         playerIndex--
         addPlayer()
       }
-
     }
     playerWater()
   }
@@ -326,25 +313,13 @@ function init() {
   function displayWater() {
     squares.forEach(square => square.classList.remove('water'))
     waterSquares = Array.from({ length: 4 * width }, (x, i) => i + width)
-    waterSquares = waterSquares.filter(water => !logsRight.includes(water) && !leafLeft.includes(water))
+    waterSquares = waterSquares.filter(water => !rainbowRight.includes(water) && !cloudLeft.includes(water))
     waterSquares.forEach(water => squares[water].classList.add('water'))
-  }
-
-  // ! MOVE LATER
-  let backImg = ''
-  // let playerTimeout = null
-
-  function setBackgroundImg() {
-    const img = squares[playerIndex]
-    const squareImg = img.currentStyle || window.getComputedStyle(img, false).backgroundImage.slice(4, -1).replace(/"/g, '')
-    const squareSlash = squareImg.slice('').lastIndexOf('/')
-    backImg = squareImg.slice(squareSlash + 1)
   }
 
   // *********** MOVE PLAYER
   function handleKeyDown(e) {
     squares[playerIndex].style.backgroundImage = ''
-
     switch (e.keyCode) {
       case 39:
         if (playerIndex % width < width - 1) playerIndex++
@@ -370,21 +345,25 @@ function init() {
         squares[playerIndex].style.backgroundImage = `url(assets/witch-down.png), url(assets/${backImg})`
         break
     }
-    // squares.forEach(square => square.classList.remove('player'))
     addPlayer()
   }
 
+  function setBackgroundImg() {
+    const img = squares[playerIndex]
+    const squareImg = img.currentStyle || window.getComputedStyle(img, false).backgroundImage.slice(4, -1).replace(/"/g, '')
+    const squareSlash = squareImg.slice('').lastIndexOf('/')
+    backImg = squareImg.slice(squareSlash + 1)
+  }
+
   function addPlayer() {
-    // clearTimeout(playerTimeout)
     squares.forEach(square => square.classList.remove('player'))
     squares[playerIndex].classList.add('player')
     setTimeout(playerWon, 250)
-    playerCar()
+    playerEnemies()
     playerWater()
   }
 
   // *********** CHECK WON/LOST
-
   function playerWon() {
     squares[playerIndex].style.backgroundImage = ''
     if (homes.includes(playerIndex)) {
@@ -421,17 +400,16 @@ function init() {
     }
   }
 
-  function playerCar() {
-    carsRight.forEach(car => {
-      if (car + 1 === playerIndex || car === playerIndex) {
-        carHit = true
+  function playerEnemies() {
+    birdsRight.forEach(bird => {
+      if (bird + 1 === playerIndex || bird === playerIndex) {
+        enemiesHit = true
         playerLost()
       }
     })
-
-    carsLeft.forEach(car => {
-      if (car - 1 === playerIndex || car === playerIndex) {
-        carHit = true
+    horsesLeft.forEach(horse => {
+      if (horse - 1 === playerIndex || horse === playerIndex) {
+        enemiesHit = true
         playerLost()
       }
     })
@@ -443,7 +421,7 @@ function init() {
       clearTimeout(waterTimeout)
     }
 
-    if (carHit || waterSquares.includes(playerIndex)) {
+    if (enemiesHit || waterSquares.includes(playerIndex)) {
       if (playerLives > 1) {
         playerScore -= 10
         playerLives -= 1
@@ -476,39 +454,36 @@ function init() {
 
   function playerDead() {
     playerDied = true
-    clearInterval(moveCarInterval)
-    clearInterval(moveLogInterval)
-    clearInterval(moveLeafFastInterval)
+    clearInterval(moveEnemiesInterval)
+    clearInterval(moveRainbowInterval)
+    clearInterval(moveCloudFastInterval)
     squares[playerIndex].classList.remove('player')
     squares[playerIndex].classList.add('player-dead')
-    // ! Background img
     squares[playerIndex].style.backgroundImage = ''
-    // stop car/log animation
     squares.forEach(square => square.classList.remove('moving-right', 'moving-left', 'moving-left-log'))
     playerIndex = width * height - 5
     setTimeout(resetPlayer, 1000)
-    carHit = false
+    enemiesHit = false
   }
 
   function resetPlayer() {
     if (playerDied) {
-      moveCars()
-      moveCarInterval = setInterval(moveCars, 600)
-      moveLogs()
-      moveLogInterval = setInterval(moveLogs, 900)
-      moveLeafFast()
-      moveLeafFastInterval = setInterval(moveLeafFast, 800)
+      moveEnemies()
+      moveEnemiesInterval = setInterval(moveEnemies, 600)
+      moveRainbow()
+      moveRainbowInterval = setInterval(moveRainbow, 900)
+      moveCloudFast()
+      moveCloudFastInterval = setInterval(moveCloudFast, 800)
       playerDied = false
     }
     squares.forEach(square => square.classList.remove('player-dead'))
     playerIndex = width * height - 5
     setBackgroundImg()
     addPlayer()
-    squares[playerIndex].style.backgroundImage = 'url(assets/witch-down.png), url(assets/ground-2.png)'
+    squares[playerIndex].style.backgroundImage = 'url(assets/witch-down.png), url(assets/ground.png)'
   }
 
   // *********** SHOW/UPDATE SCORE
-
   function addPoints(points) {
     playerScore += points
     displayScore()
@@ -534,7 +509,6 @@ function init() {
   }
 
   // *********** HIGHSCORE
-
   function getUserName() {
     userNameDiv = document.createElement('div')
     userNameDiv.classList.add('show-highscore')
@@ -558,7 +532,6 @@ function init() {
   function setHighscore() {
     userName = document.querySelector('.user-name').value
     grid.removeChild(userNameDiv)
-
     const stringScore = String(playerScore)
     localStorage.setItem(userName, stringScore)
     sortHighscore()
@@ -577,9 +550,6 @@ function init() {
     })
     showHighscore(highscoreArray)
   }
-
-  let highscoreDiv = ''
-  let highscoreTitle = ''
 
   function showHighscore(sortedScore) {
     highscoreShown = true
@@ -633,10 +603,9 @@ function init() {
     gamePlaying = false
     start.innerHTML = 'Play again'
     window.removeEventListener('keydown', handleKeyDown)
-    clearInterval(moveCarInterval)
-    clearInterval(moveLeafFastInterval)
-    // clearTimeout(addingCarsTimeOut)
-    clearInterval(moveLogInterval)
+    clearInterval(moveEnemiesInterval)
+    clearInterval(moveCloudFastInterval)
+    clearInterval(moveRainbowInterval)
   }
 
   function resetGame() {
@@ -664,11 +633,11 @@ function init() {
     // board
     homes = [8, 6, 4, 2, 0]
     squares = []
-    carsRight = [81, 84, 63, 69]
-    carsLeft = [73, 79, 54, 57, 61]
+    birdsRight = [81, 84, 63, 69]
+    horsesLeft = [73, 79, 54, 57, 61]
     waterSquares = []
-    logsRight = [10, 11, 12, 13, 27, 28, 29, 30, 31]
-    leafLeft = [38, 40, 42, 44, 18, 20, 22, 24]
+    rainbowRight = [10, 11, 12, 13, 27, 28, 29, 30, 31]
+    cloudLeft = [38, 40, 42, 44, 18, 20, 22, 24]
     countDownGame = ''
     counterTime = 3
     // player
@@ -680,15 +649,6 @@ function init() {
     gameWon = false
     gameLost = false
     playerDied = false
-    // intervals and timeouts
-    // moveCarInterval = null
-    // // addingCarsTimeOut = null
-    // moveLogInterval = null
-    // moveLeafFastInterval = null
-    // counterTimeOut = null
-    // timeOutRemoveCounter = null
-    // timeOutGame = null
-
     // Reset display lives/score
     lifeDisplay.innerHTML = playerLives
     scoreDisplay.innerHTML = playerScore
@@ -705,7 +665,7 @@ function init() {
   playBtn.addEventListener('click', removeStartScreen)
 
   // ! DELETE LATER
-  // playGame()
+  playGame()
   // gameLost = true
   // showResult()
 }
