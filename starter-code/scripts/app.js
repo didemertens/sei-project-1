@@ -39,9 +39,9 @@
 // Show player, not car going over player
 
 // Make log/leaf smoother
+// Remove bugs (play again)
 ////////
 
-// Remove bugs (play again)
 
 //////
 
@@ -68,7 +68,7 @@ function init() {
   let counterRunning = false
   let countDownGame = ''
   let counterTime = 3
-  let homes = [8, 6, 4, 2, 0]
+  let cauldrons = [8, 6, 4, 2, 0]
   // Enemies
   let birdsRight = [81, 84, 63, 69]
   let horsesLeft = [73, 79, 54, 57, 61]
@@ -179,27 +179,33 @@ function init() {
   }
 
   function makeGame() {
+    // Remove counter
     clearTimeout(timeOutGame)
+    // Create board and player with event listener
     createBoard()
     movePlayer()
   }
 
   // *********** GAME BOARD
   function createBoard() {
+    // Create grid squares
     Array(width * height).join('.').split('.').forEach(() => {
       const square = document.createElement('div')
       square.classList.add('grid-item')
       squares.push(square)
       grid.appendChild(square)
     })
+    // Move every obstacle/platform
     moveRainbow()
     moveCloudFast()
     moveRainbowInterval = setInterval(moveRainbow, 900)
     moveCloudFastInterval = setInterval(moveCloudFast, 800)
     moveEnemies()
     moveEnemiesInterval = setInterval(moveEnemies, 600)
-    createHomes()
+    // Create static elements
+    createCauldrons()
     createSafePlaces()
+    // Set background img of player
     setBackgroundImg()
   }
 
@@ -208,8 +214,8 @@ function init() {
     window.addEventListener('keydown', handleKeyDown)
   }
 
-  function createHomes() {
-    homes.forEach(home => squares[home].classList.add('homes'))
+  function createCauldrons() {
+    cauldrons.forEach(cauldron => squares[cauldron].classList.add('cauldron'))
   }
 
   function createSafePlaces() {
@@ -366,16 +372,16 @@ function init() {
   // *********** CHECK WON/LOST
   function playerWon() {
     squares[playerIndex].style.backgroundImage = ''
-    if (homes.includes(playerIndex)) {
+    if (cauldrons.includes(playerIndex)) {
       addPoints(50)
       frogsHome += 1
       frogFamily -= 1
-      squares[playerIndex].classList.remove('homes')
+      squares[playerIndex].classList.remove('cauldrons')
       squares[playerIndex].classList.add('player-won')
 
-      homes.forEach(home => {
-        if (home === playerIndex) {
-          homes.splice(homes.indexOf(home), 1)
+      cauldrons.forEach(cauldron => {
+        if (cauldron === playerIndex) {
+          cauldrons.splice(cauldrons.indexOf(cauldron), 1)
         }
       })
 
@@ -393,6 +399,7 @@ function init() {
     }
   }
 
+  // Check if player in water/hit enemy, then set time out for player lost
   function playerWater() {
     if (waterSquares.includes(playerIndex)) {
       inWater = true
@@ -467,6 +474,7 @@ function init() {
   }
 
   function resetPlayer() {
+    // Add intervals again if player has died
     if (playerDied) {
       moveEnemies()
       moveEnemiesInterval = setInterval(moveEnemies, 600)
@@ -476,6 +484,7 @@ function init() {
       moveCloudFastInterval = setInterval(moveCloudFast, 800)
       playerDied = false
     }
+    // Reset board and player
     squares.forEach(square => square.classList.remove('player-dead'))
     playerIndex = width * height - 5
     setBackgroundImg()
@@ -513,19 +522,18 @@ function init() {
     userNameDiv = document.createElement('div')
     userNameDiv.classList.add('show-highscore')
     grid.appendChild(userNameDiv)
-
+    // Get username/initials
     nameDisplay = document.createElement('input')
     nameDisplay.classList.add('user-name')
     userNameDiv.appendChild(nameDisplay)
     nameDisplay.setAttribute('type', 'text')
     nameDisplay.setAttribute('placeholder', 'Your initials')
     nameDisplay.setAttribute('maxlength', 3)
-
+    // Create submit button with event listener to show highscore
     inputUserName = document.createElement('button')
     inputUserName.classList.add('submit-btn')
     inputUserName.innerHTML = 'Submit'
     userNameDiv.appendChild(inputUserName)
-
     inputUserName.addEventListener('click', setHighscore)
   }
 
@@ -544,7 +552,6 @@ function init() {
         highscoreArray.push([localStorage.key(i), localStorage.getItem(localStorage.key(i))])
       }
     }
-
     highscoreArray.sort((a, b) => {
       return b[1] - a[1]
     })
@@ -554,19 +561,19 @@ function init() {
   function showHighscore(sortedScore) {
     highscoreShown = true
     grid.removeChild(resultGame)
-
+    // Create highscore page
     highscoreDiv = document.createElement('div')
     highscoreDiv.classList.add('show-highscore')
     grid.appendChild(highscoreDiv)
-
+    // Title
     highscoreTitle = document.createElement('h2')
     highscoreTitle.classList.add('highscore-title')
     highscoreTitle.innerHTML = 'Ranking'
     highscoreDiv.appendChild(highscoreTitle)
-
+    // List
     highscoreList = document.createElement('ol')
     highscoreDiv.appendChild(highscoreList)
-
+    // Max 10 items in list
     if (sortedScore.length > 10) {
       for (let i = 0; i < 10; i++) {
         highscoreItem = document.createElement('li')
@@ -582,7 +589,7 @@ function init() {
         highscoreItem.innerHTML = `${nameScore[0]} - ${nameScore[1]} `
       })
     }
-
+    // Add clear button so player can remove all highscores
     highscoreClear = document.createElement('button')
     highscoreClear.classList.add('clear-btn')
     highscoreDiv.appendChild(highscoreClear)
@@ -602,6 +609,7 @@ function init() {
   function stopGame() {
     gamePlaying = false
     start.innerHTML = 'Play again'
+    // Freeze game
     window.removeEventListener('keydown', handleKeyDown)
     clearInterval(moveEnemiesInterval)
     clearInterval(moveCloudFastInterval)
@@ -609,13 +617,15 @@ function init() {
   }
 
   function resetGame() {
+    // If reset button is clicked in middle of game
     if (!gameWon || !gameLost) {
       stopGame()
     }
+    // If reset button is clicked when counting down
     if (counterRunning) {
       removeCounter()
     }
-    // highscore
+    // Highscore asked/shown/cleared
     if (highscoreCleared) {
       grid.style.backgroundColor = 'white'
     } else if (highscoreShown) {
@@ -628,10 +638,9 @@ function init() {
     } else {
       squares.forEach(square => grid.removeChild(square))
     }
-
     // Reset variables
     // board
-    homes = [8, 6, 4, 2, 0]
+    cauldrons = [8, 6, 4, 2, 0]
     squares = []
     birdsRight = [81, 84, 63, 69]
     horsesLeft = [73, 79, 54, 57, 61]

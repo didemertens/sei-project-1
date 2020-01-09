@@ -267,7 +267,7 @@ h4 {
   background-repeat: no-repeat;
 }
 
-.grid-item.safe-place.homes {
+.grid-item.safe-place.cauldron {
   background-image: url(../assets/cauldron.png), url(../assets/ground.png);
   background-size: contain;
   background-repeat: no-repeat;
