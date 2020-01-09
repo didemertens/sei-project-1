@@ -126,7 +126,6 @@ function init() {
   function playGame() {
     if (!gamePlaying) {
       gamePlaying = true
-      // ! Check game difficulty
       if (difficultyEasy.checked) {
         playerLives = 5
         lifeDisplay.innerHTML = playerLives
@@ -137,9 +136,6 @@ function init() {
         playerLives = 1
         lifeDisplay.innerHTML = playerLives
       }
-      // ! Delete event listeners?
-      // start.removeEventListener('click', playGame)
-      // start.addEventListener('click', resetGame)
       // Show reset btn
       start.innerHTML = 'Reset'
       makeGame()
@@ -198,7 +194,6 @@ function init() {
         return bird - (width - 1)
       }
     })
-
     horsesLeft = horsesLeft.map(horse => {
       if (horse % width > 0) {
         return horse - 1
@@ -391,15 +386,16 @@ function init() {
   }
 
   function playerLost() {
+    // If player on safe place, not dead
     if (squares[playerIndex].classList.contains('safe-place')) {
       return
     }
-
+    // If in water, reset check player in water function
     if (inWater) {
       inWater = false
       clearTimeout(waterTimeout)
     }
-
+    // Check dead
     if (enemiesHit || waterSquares.includes(playerIndex)) {
       if (playerLives > 1) {
         playerScore -= 10
@@ -442,7 +438,6 @@ function init() {
     squares[playerIndex].classList.add('player-dead')
     squares[playerIndex].style.backgroundImage = ''
     squares.forEach(square => square.classList.remove('moving-right', 'moving-left', 'moving-left-log'))
-    // playerIndex = width * height - 5
     setTimeout(resetPlayer, 1000)
     enemiesHit = false
   }
@@ -478,8 +473,12 @@ function init() {
   }
 
   function showResult() {
-    squares.forEach(square => grid.removeChild(square))
     playerScoreShown = true
+    // Remove every square
+    while (grid.firstChild) {
+      grid.removeChild(grid.firstChild)
+    }
+    // Show result
     resultGame = document.createElement('h3')
     resultGame.classList.add('result-game')
     grid.appendChild(resultGame)
@@ -607,7 +606,9 @@ function init() {
       grid.removeChild(userNameDiv)
       grid.style.backgroundColor = 'white'
     } else {
-      squares.forEach(square => grid.removeChild(square))
+      while (grid.firstChild) {
+        grid.removeChild(grid.firstChild)
+      }
     }
     // Reset variables
     // board
@@ -634,18 +635,11 @@ function init() {
     playerScoreShown = false
     highscoreCleared = false
     highscoreShown = false
-    // ! Delete? Play again
-    // playGame()
   }
 
   // Event listeners
   start.addEventListener('click', createStartScreen)
   playBtn.addEventListener('click', removeStartScreen)
-
-  // ! DELETE LATER
-  // playGame()
-  // gameWon = true
-  // showResult()
 }
 
 window.addEventListener('DOMContentLoaded', init)
