@@ -6,7 +6,7 @@
   --road-blue-color: #0F278E;
   --player-dies-color: #5a0f0f;
   --btn-yellow-color: #F7C015;
-  --sky-pink-color: #DE5B8D;
+  --btn-orange-color: #FDAF3B;
 }
 
 * {
@@ -48,9 +48,9 @@ html, body {
   width: 456px;
   border: 3px solid var(--main-black-color);
   background-color: var(--main-black-color);
-  -webkit-box-shadow: 9px 10px 5px -6px rgba(0,0,0,0.75);
-  -moz-box-shadow: 9px 10px 5px -6px rgba(0,0,0,0.75);
-  box-shadow: 9px 10px 5px -6px rgba(0,0,0,0.75);
+  -webkit-box-shadow: 10px 10px 5px -10px rgba(0,1,3,1);
+  -moz-box-shadow: 10px 10px 5px -10px rgba(0,1,3,1);
+  box-shadow: 10px 10px 5px -10px rgba(0,1,3,1);
   border-radius: 4px;
   display: flex;
   align-items: center;
@@ -95,8 +95,8 @@ html, body {
 
 .difficulty {
   margin-top: 10px;
-  margin-left: -25px;
-  display:flex;
+  margin-left: -30px;
+  display: flex;
 }
 
 .difficulty-choice {
@@ -109,7 +109,7 @@ html, body {
 }
 
 .player-choice:checked + label {
-  color: var(--sky-pink-color);
+  color: var(--btn-orange-color);
 }
 
 .start {
@@ -121,9 +121,9 @@ html, body {
   height: 557px;
   width: 456px;
   border: 3px solid var(--main-black-color);
-  -webkit-box-shadow: 9px 10px 5px -6px rgba(0,0,0,0.75);
-  -moz-box-shadow: 9px 10px 5px -6px rgba(0,0,0,0.75);
-  box-shadow: 9px 10px 5px -6px rgba(0,0,0,0.75);
+  -webkit-box-shadow: 10px 10px 5px -10px rgba(0,1,3,1);
+  -moz-box-shadow: 10px 10px 5px -10px rgba(0,1,3,1);
+  box-shadow: 10px 10px 5px -10px rgba(0,1,3,1);
   border-radius: 4px;
   flex-wrap: wrap;
   justify-content: center;
@@ -193,7 +193,6 @@ h4 {
   width: 50px;
 }
 
-/* Board vars */
 .grid-item.player {
   background-image: url('../assets/witch-down.png');
   background-repeat: no-repeat;

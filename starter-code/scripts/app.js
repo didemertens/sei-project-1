@@ -66,10 +66,6 @@ function init() {
   const height = 11
   let squares = []
   let backImg = ''
-  // Counter
-  let counterRunning = false
-  let countDownGame = ''
-  let counterTime = 3
   let cauldrons = [8, 6, 4, 2, 0]
   // Enemies
   let birdsRight = [81, 84, 63, 69]
@@ -83,9 +79,6 @@ function init() {
   let moveEnemiesInterval = null
   let moveRainbowInterval = null
   let moveCloudFastInterval = null
-  let counterTimeOut = null
-  let timeOutRemoveCounter = null
-  let timeOutGame = null
   // player
   let playerIndex = width * height - 5
   let playerLives = 3
@@ -130,8 +123,6 @@ function init() {
     playGame()
   }
 
-  // animation: move-grid 1s infinite;
-
   function playGame() {
     if (!gamePlaying) {
       gamePlaying = true
@@ -151,52 +142,11 @@ function init() {
       // start.addEventListener('click', resetGame)
       // Show reset btn
       start.innerHTML = 'Reset'
-      // Counter
-      // ! Delete
       makeGame()
-      // ! Uncomment later
-      // if (!counterRunning) {
-      //   counterRunning = true
-      //   createCounter()
-      // }
     }
-  }
-
-  function createCounter() {
-    grid.style.backgroundColor = 'black'
-    countDownGame = document.createElement('h2')
-    countDownGame.classList.add('count-down')
-    grid.appendChild(countDownGame)
-    showCountDown()
-  }
-
-  function showCountDown() {
-    countDownGame.innerHTML = `Get ready!<br> ${counterTime}`
-    countDown()
-  }
-
-  function countDown() {
-    if (counterTime >= 1) {
-      counterTime--
-      counterTimeOut = setTimeout(showCountDown, 1000)
-    } else {
-      countDownGame.innerHTML = 'Go!'
-      timeOutRemoveCounter = setTimeout(removeCounter, 1000)
-      timeOutGame = setTimeout(makeGame, 1000)
-    }
-  }
-
-  function removeCounter() {
-    grid.removeChild(countDownGame)
-    clearTimeout(counterTimeOut)
-    clearTimeout(timeOutRemoveCounter)
-    grid.style.backgroundColor = 'white'
-    counterRunning = false
   }
 
   function makeGame() {
-    // Remove counter
-    clearTimeout(timeOutGame)
     // Create board and player with event listener
     createBoard()
     movePlayer()
@@ -419,7 +369,9 @@ function init() {
   function playerWater() {
     if (waterSquares.includes(playerIndex)) {
       inWater = true
-      waterTimeout = setTimeout(playerLost, 450)
+      waterTimeout = setTimeout(playerLost, 400)
+    } else if (squares[playerIndex].classList.contains('player-won')) {
+      playerLost()
     }
   }
 
@@ -439,6 +391,10 @@ function init() {
   }
 
   function playerLost() {
+    if (squares[playerIndex].classList.contains('safe-place')) {
+      return
+    }
+
     if (inWater) {
       inWater = false
       clearTimeout(waterTimeout)
@@ -455,8 +411,9 @@ function init() {
         playerLives = 0
         lifeDisplay.innerHTML = playerLives
         gameLost = true
+        playerDead()
         stopGame()
-        showResult()
+        setTimeout(showResult, 400)
       }
     } else if (squares[playerIndex].classList.contains('player-won')) {
       if (playerLives > 1 && frogsHome !== 5) {
@@ -469,8 +426,9 @@ function init() {
         playerLives = 0
         lifeDisplay.innerHTML = playerLives
         gameLost = true
+        playerDead()
         stopGame()
-        showResult()
+        setTimeout(showResult, 400)
       }
     }
   }
@@ -484,7 +442,7 @@ function init() {
     squares[playerIndex].classList.add('player-dead')
     squares[playerIndex].style.backgroundImage = ''
     squares.forEach(square => square.classList.remove('moving-right', 'moving-left', 'moving-left-log'))
-    playerIndex = width * height - 5
+    // playerIndex = width * height - 5
     setTimeout(resetPlayer, 1000)
     enemiesHit = false
   }
@@ -502,6 +460,7 @@ function init() {
     }
     // Reset board and player
     squares.forEach(square => square.classList.remove('player-dead'))
+    // ! DELETE
     playerIndex = width * height - 5
     setBackgroundImg()
     addPlayer()
@@ -519,8 +478,8 @@ function init() {
   }
 
   function showResult() {
-    playerScoreShown = true
     squares.forEach(square => grid.removeChild(square))
+    playerScoreShown = true
     resultGame = document.createElement('h3')
     resultGame.classList.add('result-game')
     grid.appendChild(resultGame)
@@ -637,10 +596,6 @@ function init() {
     if (!gameWon || !gameLost) {
       stopGame()
     }
-    // If reset button is clicked when counting down
-    if (counterRunning) {
-      removeCounter()
-    }
     // Highscore asked/shown/cleared
     if (highscoreCleared) {
       grid.style.backgroundColor = 'white'
@@ -663,8 +618,6 @@ function init() {
     waterSquares = []
     rainbowRight = [10, 11, 12, 13, 27, 28, 29, 30, 31]
     cloudLeft = [38, 40, 42, 44, 18, 20, 22, 24]
-    countDownGame = ''
-    counterTime = 3
     // player
     playerLives = 3
     frogFamily = 5
@@ -691,7 +644,7 @@ function init() {
 
   // ! DELETE LATER
   // playGame()
-  // gameLost = true
+  // gameWon = true
   // showResult()
 }
 
