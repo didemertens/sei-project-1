@@ -47,8 +47,11 @@
 
 function init() {
   // DOM VARIABLES
+  const startGrid = document.querySelector('.start-grid')
   const grid = document.querySelector('.grid')
   const start = document.querySelector('.start')
+  const playBtn = document.querySelector('.play-btn')
+  const gameResultDisplay = document.querySelector('.game-lives-score')
   const lifeDisplay = document.querySelector('#player-lives')
   const scoreDisplay = document.querySelector('#player-score')
 
@@ -112,6 +115,22 @@ function init() {
 
   // Functions
   // *********** START GAME
+  function createStartScreen() {
+    resetGame()
+    grid.style.display = 'none'
+    start.style.visibility = 'hidden'
+    gameResultDisplay.style.visibility = 'hidden'
+    startGrid.style.display = 'flex'
+  }
+
+  function removeStartScreen() {
+    grid.style.display = 'flex'
+    start.style.visibility = 'visible'
+    gameResultDisplay.style.visibility = 'visible'
+    startGrid.style.display = 'none'
+    playGame()
+  }
+
   function playGame() {
     if (!gamePlaying) {
       gamePlaying = true
@@ -121,12 +140,12 @@ function init() {
       start.innerHTML = 'Reset'
       // Counter
       // ! Delete
-      makeGame()
+      // makeGame()
       // ! Uncomment later
-      // if (!counterRunning) {
-      //   counterRunning = true
-      //   createCounter()
-      // }
+      if (!counterRunning) {
+        counterRunning = true
+        createCounter()
+      }
     }
   }
 
@@ -371,7 +390,6 @@ function init() {
     if (homes.includes(playerIndex)) {
       addPoints(50)
       frogsHome += 1
-      console.log(frogsHome)
       frogFamily -= 1
       squares[playerIndex].classList.remove('homes')
       squares[playerIndex].classList.add('player-won')
@@ -483,11 +501,10 @@ function init() {
       playerDied = false
     }
     squares.forEach(square => square.classList.remove('player-dead'))
-    // playerIndex = width * height - 5
-    playerIndex = 0
+    playerIndex = width * height - 5
     setBackgroundImg()
     addPlayer()
-    squares[playerIndex].style.backgroundImage = 'url(assets/witch-down.png), url(assets/grass.png)'
+    squares[playerIndex].style.backgroundImage = 'url(assets/witch-down.png), url(assets/ground-2.png)'
   }
 
   // *********** SHOW/UPDATE SCORE
@@ -607,6 +624,7 @@ function init() {
     highscoreCleared = true
     localStorage.clear()
     grid.removeChild(highscoreDiv)
+    createStartScreen()
   }
 
   // *********** STOP/RESET GAME
@@ -684,9 +702,10 @@ function init() {
 
   // Event listeners
   start.addEventListener('click', playGame)
+  playBtn.addEventListener('click', removeStartScreen)
 
   // ! DELETE LATER
-  playGame()
+  // playGame()
   // gameLost = true
   // showResult()
 }
