@@ -6,7 +6,7 @@ Use the arrow keys to move the witch. The goal is to get all 5 witches to their 
 
 ## Screenshots
 <img src="/assets/frogger-scr-1.png" alt="Frogger start screen screenshot" height="400"/> <img src="/assets/frogger-scr-2.png" alt="Frogger game play screenshot" height="400"/>
-<img src="/assets/frogger-scr-3.png" alt="Frogger game lost screenshot" height="400"/> <img src="/assets/frogger-scr-4.png" alt="Frogger ranking screenshot" height="400"/>
+<img src="/assets/frogger-scr-3.png" alt="Frogger game lost screenshot" height="380"/> <img src="/assets/frogger-scr-4.png" alt="Frogger ranking screenshot" height="380"/>
 
 ## Technologies
 * Written in vanilla JavaScript
