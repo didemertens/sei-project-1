@@ -60,7 +60,6 @@ function init() {
   // GAME VARIABLES
   let gamePlaying = false
   let resultGame = ''
-
   // board
   const width = 9
   const height = 11
@@ -70,7 +69,6 @@ function init() {
   // Enemies
   let birdsRight = [81, 84, 63, 69]
   let horsesLeft = [73, 79, 54, 57, 61]
-  // const roadSquares = []
   // water
   let waterSquares = []
   let rainbowRight = [10, 11, 12, 13, 27, 28, 29, 30, 31]
@@ -446,19 +444,18 @@ function init() {
     // Add intervals again if player has died
     if (playerDied) {
       moveEnemies()
-      moveEnemiesInterval = setInterval(moveEnemies, 600)
       moveRainbow()
-      moveRainbowInterval = setInterval(moveRainbow, 900)
       moveCloudFast()
+      moveEnemiesInterval = setInterval(moveEnemies, 600)
+      moveRainbowInterval = setInterval(moveRainbow, 900)
       moveCloudFastInterval = setInterval(moveCloudFast, 800)
       playerDied = false
     }
     // Reset board and player
     squares.forEach(square => square.classList.remove('player-dead'))
-    // ! DELETE
     playerIndex = width * height - 5
-    setBackgroundImg()
     addPlayer()
+    setBackgroundImg()
     squares[playerIndex].style.backgroundImage = 'url(assets/witch-down.png), url(assets/ground.png)'
   }
 
