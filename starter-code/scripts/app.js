@@ -429,26 +429,16 @@ function init() {
 
   function playerDead() {
     playerDied = true
-    clearInterval(moveEnemiesInterval)
-    clearInterval(moveRainbowInterval)
-    clearInterval(moveCloudFastInterval)
     squares[playerIndex].classList.remove('player')
     squares[playerIndex].classList.add('player-dead')
     squares[playerIndex].style.backgroundImage = ''
-    squares.forEach(square => square.classList.remove('moving-right', 'moving-left', 'moving-left-log'))
-    setTimeout(resetPlayer, 1000)
+    squares.forEach(square => square.classList.remove('moving-right', 'moving-left', 'moving-left-cloud'))
+    setTimeout(resetPlayer, 400)
     enemiesHit = false
   }
 
   function resetPlayer() {
-    // Add intervals again if player has died
     if (playerDied) {
-      moveEnemies()
-      moveRainbow()
-      moveCloudFast()
-      moveEnemiesInterval = setInterval(moveEnemies, 600)
-      moveRainbowInterval = setInterval(moveRainbow, 900)
-      moveCloudFastInterval = setInterval(moveCloudFast, 800)
       playerDied = false
     }
     // Reset board and player
