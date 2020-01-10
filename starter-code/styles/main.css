@@ -152,7 +152,7 @@ h4 {
   color: var(--main-whiter-color);
   text-align: center;
   margin-top: -25px;
-  font-size: 45px;
+  font-size: 42px;
 }
 
 .highscore-title {
@@ -161,7 +161,7 @@ h4 {
 
 .highest-scores {
   color: var(--main-whiter-color);
-  font-size: 28px;
+  font-size: 25px;
 }
 
 .total-points {

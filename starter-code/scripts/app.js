@@ -42,6 +42,8 @@
 // Remove bugs (play again)
 ////////
 
+// improve: when you click really fast as player, doesn't remove the witch from background because index has already been changed
+// Instead of showing result/ranking inside of grid, make new grid and hide that at first (same as with start screen), so don't need to create so many elements  in JS
 
 //////
 
