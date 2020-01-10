@@ -2,7 +2,7 @@
 This a version of the game Frogger created with HTML, CSS and JavaScript. 
 
 ## Game play
-The goal is to get all 5 witches to their cauldrons, avoiding the birds and winged horses. After those obstacles, the player needs to hitch a ride with a cloud or rainbow. There are 3 difficulty levels, which changes the total amount of lives (5, 3 or 1) at the beginning of a game. At the end, the user can save their score and a ranking top 10 is shown, which uses local storage. 
+The goal is to get all 5 witches to their cauldrons, avoiding the birds and winged horses. After those obstacles, the player needs to hitch a ride with a cloud or rainbow. There are 3 difficulty levels, which changes the total amount of lives (5, 3 or 1) at the beginning of a game. At the end, the user can save their score and a ranking top 10 is shown, which uses local storage.  
 Play it [here](https://didemertens.github.io/sei-project-1/).
 
 ## Future improvements
