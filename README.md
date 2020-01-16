@@ -1,12 +1,11 @@
-<img src="GAlogo.png" alt="GA logo">
-
 # Frogger - General Assembly Project 1
 This is a version of the game Frogger which I made during the Software Engineering Immersive course. The time frame to create the game was 7 days. 
 
 ## Built with
-* HTML
-* CSS 
-* JavaScript
+* HTML5
+* CSS3
+* Vanilla JavaScript (ES6)
+* Git
 * GitHub
 
 ## Deployment
