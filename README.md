@@ -1,4 +1,6 @@
-# Frogger (sort of)
+<img src="GAlogo.png" alt="GA logo">
+
+# Frogger - General Assembly Project 1
 This is a version of the game Frogger which I made during the Software Engineering Immersive course. The time frame to create the game was 7 days. 
 
 ## Built with
@@ -11,7 +13,7 @@ This is a version of the game Frogger which I made during the Software Engineeri
 The game is deployed on GitHub Pages and can be found [here](https://didemertens.github.io/sei-project-1/).
 
 ## Getting started
-Download the source code of the game using the clone button. Then open the index.html file in your browser to play the game. It should work in all browsers, including Chrome, Firefox, Safari and Opera.
+Clone or download the repo. Then open the `index.html` file in your browser to play the game. It should work in all browsers, including Chrome, Firefox, Safari and Opera.
 
 ## Game architecture
 The goal of this version of Frogger is to get all of the witches to their cauldrons at the other side of the board. There are obstacles to avoid, the birds and winged horses, and others that you have to hitch a ride with, the clouds and rainbows.  
