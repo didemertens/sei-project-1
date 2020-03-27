@@ -20,7 +20,7 @@ Clone or download the repo. Then open the `index.html` file in your browser to p
 
 The goal of this version of Frogger is to get all of the witches to their cauldrons at the other side of the board. There are obstacles to avoid, the birds and winged horses, and others that you have to hitch a ride with, the clouds and rainbows.  
 
-The player uses the arrow keys to move the witches. I wanted the image of the witch to change depending on the arrow keys. For example, if the witch moved to the right I wanted her image to face the right as well. I did this by setting the correct image of witch on the correct background image, as can be seen here for the right arrow key:
+The player uses the arrow keys to move the witches. I wanted the image of the witch to change depending on the arrow keys. For example, if the witch moved to the right I wanted her image to face the right as well. I did this by setting the correct image of the witch on the correct background image, as can be seen here for the right arrow key:
 
 ```
  switch (e.keyCode) {
@@ -32,7 +32,7 @@ The player uses the arrow keys to move the witches. I wanted the image of the wi
       ...
 ```
 
-I needed the background image as well, because there are different background images on the board. To show the correct background image behind the witch each time, I made a function that sets the correct image. I first grab the correct square and then use currentStyle or getComputedStyle to get the image in the correct format. I then needed to slice a lot of data from the image as I only needed a particular part.
+I needed the background image as well, because there are different background images on the board. To show the correct background image behind the witch each time, I made a function that sets the correct image. I first grab the relevant square and then use currentStyle or getComputedStyle to get the image in the correct format. I then needed to slice a lot of data from the image as I only needed a particular part.
 
 ```
  function setBackgroundImg() {
