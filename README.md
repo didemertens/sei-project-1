@@ -32,7 +32,7 @@ The player uses the arrow keys to move the witches. I wanted the image of the wi
       ...
 ```
 
-I needed the background image as well, because there are different background images on the board. To show the correct background image behind the witch each time, I made a function that sets the correct image. I first grab the relevant square and then use currentStyle or getComputedStyle to get the image in the correct format. I then needed to slice a lot of data from the image as I only needed a particular part.
+I needed the background image as well, because there are different background images on the board. To show the correct background image behind the witch each time, I made a function that sets that image. I first grab the relevant square and then use currentStyle or getComputedStyle to get the image in the correct format. I then needed to slice a lot of data from the image as I only needed a particular part:
 
 ```
  function setBackgroundImg() {
@@ -43,8 +43,7 @@ I needed the background image as well, because there are different background im
   }
 ```
 
-
-There are 3 difficulty levels, which changes the total amount of lives to 5, 3 or 1 for the game. At the end, the user can save their score by typing in their initials and a list of the top 10 scores is shown, which uses local storage.
+At the start of the game the player can choose from 3 difficulty levels, which changes the total amount of lives to 5, 3 or 1. At the end, the user can save their score by typing in their initials and a list of the top 10 scores is shown, which uses local storage.
 
 ### Win condition
 If the player gets all of the witches to their cauldrons, the game ends and the player wins. The score screen is displayed and the player can save their score.
@@ -54,12 +53,9 @@ If the player has no lives left and not all of the witches are at their cauldron
 
 ## Wins and challenges
 * It was amazing to be able to actually play a game I made myself. I learned a lot about using timeouts and intervals as well as connecting these all together so the game runs in the correct order. 
-
 * The player image changes, depending on which way the player moves. This was both a win and a challenge. I managed to actually change the image as well as get the correct background image each time an arrow key is pressed. However, when you move the player really fast (by holding in the same key), there is a slight delay and it doesn't remove the witch from the background because the index has already been changed.
-
 * It was very difficult to get the obstacles to move as smooth as possible using CSS animations and JavaScript. Because the game is built with a grid, the index of the obstacles is updated slightly after the animation. If for example a player hits an obstacle, the index wouldn’t be the right one yet. I fixed this by using timeouts for checking if the player was hit or not, but this means that to have the best game experience, you have to wait for a short time to see if you’re dead or not after each step.
 
 ## Future improvements
 * Instead of showing the result and ranking inside the existing grid, I want to make a new grid and hide that at first (which I did do for the start screen). That way, it isn't necessary to create all of the HTML elements in JS.
-
 * I would like to make it possible to also play this game on a phone. Because the witches are moved using the arrow keys, it doesn't work when you're on a device without those keys. I want to add for example the keys on the screen so people can use that to play.
